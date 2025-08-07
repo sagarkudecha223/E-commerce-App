@@ -11,12 +11,18 @@ abstract class MainAppData implements Built<MainAppData, MainAppDataBuilder> {
 
   ScreenState get state;
 
+  bool get isLoggedIn;
+
+  bool get isLightTheme;
+
   String? get errorMessage;
 }
 
 abstract class MainAppEvent {}
 
 class InitMainAppEvent extends MainAppEvent {}
+
+class ChangeThemeEvent extends MainAppEvent {}
 
 class UpdateMainAppState extends MainAppEvent {
   final MainAppData state;
