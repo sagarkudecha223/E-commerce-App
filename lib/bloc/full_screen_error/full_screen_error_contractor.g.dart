@@ -1,40 +1,36 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'main_app_contract.dart';
+part of 'full_screen_error_contractor.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$MainAppData extends MainAppData {
+class _$FullScreenErrorData extends FullScreenErrorData {
   @override
   final ScreenState state;
   @override
-  final bool isLoggedIn;
-  @override
   final String? errorMessage;
 
-  factory _$MainAppData([void Function(MainAppDataBuilder)? updates]) =>
-      (MainAppDataBuilder()..update(updates))._build();
+  factory _$FullScreenErrorData([
+    void Function(FullScreenErrorDataBuilder)? updates,
+  ]) => (FullScreenErrorDataBuilder()..update(updates))._build();
 
-  _$MainAppData._({
-    required this.state,
-    required this.isLoggedIn,
-    this.errorMessage,
-  }) : super._();
+  _$FullScreenErrorData._({required this.state, this.errorMessage}) : super._();
   @override
-  MainAppData rebuild(void Function(MainAppDataBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  FullScreenErrorData rebuild(
+    void Function(FullScreenErrorDataBuilder) updates,
+  ) => (toBuilder()..update(updates)).build();
 
   @override
-  MainAppDataBuilder toBuilder() => MainAppDataBuilder()..replace(this);
+  FullScreenErrorDataBuilder toBuilder() =>
+      FullScreenErrorDataBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is MainAppData &&
+    return other is FullScreenErrorData &&
         state == other.state &&
-        isLoggedIn == other.isLoggedIn &&
         errorMessage == other.errorMessage;
   }
 
@@ -42,7 +38,6 @@ class _$MainAppData extends MainAppData {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, state.hashCode);
-    _$hash = $jc(_$hash, isLoggedIn.hashCode);
     _$hash = $jc(_$hash, errorMessage.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -50,36 +45,31 @@ class _$MainAppData extends MainAppData {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'MainAppData')
+    return (newBuiltValueToStringHelper(r'FullScreenErrorData')
           ..add('state', state)
-          ..add('isLoggedIn', isLoggedIn)
           ..add('errorMessage', errorMessage))
         .toString();
   }
 }
 
-class MainAppDataBuilder implements Builder<MainAppData, MainAppDataBuilder> {
-  _$MainAppData? _$v;
+class FullScreenErrorDataBuilder
+    implements Builder<FullScreenErrorData, FullScreenErrorDataBuilder> {
+  _$FullScreenErrorData? _$v;
 
   ScreenState? _state;
   ScreenState? get state => _$this._state;
   set state(ScreenState? state) => _$this._state = state;
 
-  bool? _isLoggedIn;
-  bool? get isLoggedIn => _$this._isLoggedIn;
-  set isLoggedIn(bool? isLoggedIn) => _$this._isLoggedIn = isLoggedIn;
-
   String? _errorMessage;
   String? get errorMessage => _$this._errorMessage;
   set errorMessage(String? errorMessage) => _$this._errorMessage = errorMessage;
 
-  MainAppDataBuilder();
+  FullScreenErrorDataBuilder();
 
-  MainAppDataBuilder get _$this {
+  FullScreenErrorDataBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _state = $v.state;
-      _isLoggedIn = $v.isLoggedIn;
       _errorMessage = $v.errorMessage;
       _$v = null;
     }
@@ -87,31 +77,26 @@ class MainAppDataBuilder implements Builder<MainAppData, MainAppDataBuilder> {
   }
 
   @override
-  void replace(MainAppData other) {
-    _$v = other as _$MainAppData;
+  void replace(FullScreenErrorData other) {
+    _$v = other as _$FullScreenErrorData;
   }
 
   @override
-  void update(void Function(MainAppDataBuilder)? updates) {
+  void update(void Function(FullScreenErrorDataBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  MainAppData build() => _build();
+  FullScreenErrorData build() => _build();
 
-  _$MainAppData _build() {
+  _$FullScreenErrorData _build() {
     final _$result =
         _$v ??
-        _$MainAppData._(
+        _$FullScreenErrorData._(
           state: BuiltValueNullFieldError.checkNotNull(
             state,
-            r'MainAppData',
+            r'FullScreenErrorData',
             'state',
-          ),
-          isLoggedIn: BuiltValueNullFieldError.checkNotNull(
-            isLoggedIn,
-            r'MainAppData',
-            'isLoggedIn',
           ),
           errorMessage: errorMessage,
         );

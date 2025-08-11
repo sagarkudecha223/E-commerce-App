@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/cache/preference_store.dart';
@@ -12,27 +11,19 @@ class ThemeService {
 
   final PreferenceStore _preferenceStore;
 
-  final _themeChanged = StreamController<bool>.broadcast();
+  final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
-  Stream<bool> notifyThemeChange() => _themeChanged.stream;
-
-  void changeThemeMode() {
-    final isLightTheme = _changeTheme();
-    _themeChanged.add(isLightTheme);
+  void getThemeMode() {
+    final bool isLight =
+        _preferenceStore.getValue(SharedPreferenceStore.IS_DARK_THEME) ?? true;
+    themeNotifier.value = isLight ? ThemeMode.light : ThemeMode.dark;
+    AppColors.isLightTheme = isLight;
   }
 
-  bool getThemeMode() {
-    AppColors.isLightTheme =
-        _preferenceStore.getValue(SharedPreferenceStore.IS_DARK_THEME) ?? false;
-    return AppColors.isLightTheme;
-  }
-
-  bool _changeTheme() {
-    _preferenceStore.setValue(
-      SharedPreferenceStore.IS_DARK_THEME,
-      !AppColors.isLightTheme,
-    );
-    AppColors.isLightTheme = !AppColors.isLightTheme;
-    return AppColors.isLightTheme;
+  void changeTheme() {
+    final isDark = themeNotifier.value == ThemeMode.dark;
+    themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
+    _preferenceStore.setValue(SharedPreferenceStore.IS_DARK_THEME, isDark);
+    AppColors.isLightTheme = !isDark;
   }
 }

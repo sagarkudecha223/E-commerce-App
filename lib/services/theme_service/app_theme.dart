@@ -8,7 +8,7 @@ class AppTheme {
     brightness: Brightness.light,
     fontFamily: AppFontTextStyles.fontFamily,
     colorScheme: const ColorScheme.light(
-      primary: AppColors.primaryBlue1,
+      primary: AppColors.primaryOrange,
       secondary: AppColors.secondary,
       surface: AppColors.lightSurface,
       onPrimary: AppColors.lightOnPrimary,
@@ -33,7 +33,7 @@ class AppTheme {
       ),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.primaryBlue1,
+      backgroundColor: AppColors.primaryOrange,
       foregroundColor: Colors.white,
       elevation: 0,
     ),
@@ -43,7 +43,7 @@ class AppTheme {
     brightness: Brightness.dark,
     fontFamily: AppFontTextStyles.fontFamily,
     colorScheme: const ColorScheme.dark(
-      primary: AppColors.primaryBlue1,
+      primary: AppColors.primaryOrange,
       secondary: AppColors.secondary,
       surface: AppColors.darkSurface,
       onPrimary: AppColors.darkOnPrimary,

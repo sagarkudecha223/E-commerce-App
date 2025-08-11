@@ -22,7 +22,7 @@ extension AppLoaderThemeColor on AppLoaderTheme {
   Color get backgroundColor {
     switch (this) {
       case AppLoaderTheme.light:
-        return AppColors.primaryBlue1;
+        return AppColors.primaryOrange;
       case AppLoaderTheme.dark:
         return AppColors.secondary;
     }

@@ -33,20 +33,20 @@ abstract class AppFontTextStyles {
     letterSpacing: 0.07,
   );
 
-  static TextStyle buttonTextStyle() => TextStyle(
+  static TextStyle buttonTextStyle() => const TextStyle(
     fontFamily: AppFontTextStyles.fontFamily,
     fontWeight: FontWeight.w600,
     fontSize: Dimens.fontSizeFourteen,
-    color: AppColors.textColor,
+    color: AppColors.white,
     overflow: TextOverflow.ellipsis,
     letterSpacing: 0.07,
   );
 
-  static TextStyle appbarTextStyle() => TextStyle(
+  static TextStyle appbarTextStyle() => const TextStyle(
     fontFamily: AppFontTextStyles.fontFamily,
     fontWeight: FontWeight.w600,
-    fontSize: Dimens.fontSizeSixteen,
-    color: AppColors.textColor,
+    fontSize: Dimens.fontSizeEighteen,
+    color: AppColors.lightTextHigh,
     overflow: TextOverflow.ellipsis,
     letterSpacing: 0.07,
   );

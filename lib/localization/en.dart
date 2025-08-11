@@ -25,4 +25,40 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get connectionError => 'Connection error';
+
+  /// Login
+
+  @override
+  String get logIn => 'Log In';
+
+  @override
+  String get welcome => 'Welcome';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get welcomeText2 =>
+      'Whether it’s a cozy night in or a busy day,\n we’re here to deliver happiness with every bite.';
+
+  @override
+  String get signUpWithGoogle => 'Sign up with Google';
+
+  @override
+  String get doNotHaveAccount => 'Don’t have an account?';
+
+  @override
+  String get signUp => 'Sign Up';
+
+  @override
+  String get emailNotEmpty => 'Email should not be blank';
+
+  @override
+  String get emailNotValid => 'Enter valid email';
+
+  @override
+  String get passwordNotEmpty => 'Password should not be blank';
 }
