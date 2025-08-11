@@ -13,8 +13,6 @@ abstract class MainAppData implements Built<MainAppData, MainAppDataBuilder> {
 
   bool get isLoggedIn;
 
-  bool get isLightTheme;
-
   String? get errorMessage;
 }
 

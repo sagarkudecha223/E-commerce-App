@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static bool isLightTheme = false;
+  static bool isLightTheme = true;
 
   // Primary brand color
-  static const Color primaryBlue1 = Color(0xFF254D99);
   static const Color primaryBlue2 = Color(0xFF549DD6);
-  static const Color pastelBlue = Color(0xFFA3C8F0);
   static const Color mutedPeach = Color(0xFFF6C5B2);
   static const Color secondary = Color(0xFF03DAC6);
+  static const Color primaryOrange = Color(0xFFE95322);
+  static const Color secondaryOrange = Color(0xFFFFDECF);
+  static const Color primaryYellow = Color(0xFFF5CB58);
+  static const Color secondaryYellow = Color(0xFFF3E9B5);
 
   // Light theme
   static const Color lightBackground = Color(0xFFFFFFFF);
@@ -61,4 +63,6 @@ class AppColors {
 
   static Color get shadowColor =>
       isLightTheme ? lightTextDisabled : darkTextMedium;
+
+  static const Color focusedBorderColor = primaryOrange;
 }

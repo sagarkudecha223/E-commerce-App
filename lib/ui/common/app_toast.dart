@@ -20,7 +20,7 @@ class AppToast extends StatelessWidget {
         child: Container(
           decoration: ShapeDecoration(
             shape: StadiumBorder(),
-            color: AppColors.shadowColor,
+            color: AppColors.primaryYellow,
           ),
           padding: EdgeInsets.symmetric(
             horizontal: Dimens.spaceLarge,

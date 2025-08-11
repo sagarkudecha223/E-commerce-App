@@ -122,6 +122,9 @@ class Dimens {
   //Tab Bar
   static const double tabBarHeight = 70;
 
+  //App Bar
+  static const double appBarHeight = 65;
+
   //Toolbar
   static const double keyboardToolbarHeight = 44;
 

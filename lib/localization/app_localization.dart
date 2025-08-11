@@ -5,4 +5,23 @@ abstract class AppLocalization extends BaseLocalization {
 
   static AppLocalization currentLocalization() =>
       Localization.currentLocalization as AppLocalization;
+
+  String get logIn;
+
+  String get welcome;
+
+  String get email;
+
+  String get password;
+
+  String get welcomeText2;
+
+  String get signUpWithGoogle;
+
+  String get doNotHaveAccount;
+
+  String get signUp;
+  String get emailNotEmpty;
+  String get emailNotValid;
+  String get passwordNotEmpty;
 }
