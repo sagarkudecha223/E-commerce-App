@@ -41,6 +41,8 @@ class AppColors {
   static const Color lightRed = Color(0xFFF85C5C);
   static const Color red = Color(0xFFC82333);
 
+  static const Color scaffoldBackGroundColor = primaryYellow;
+
   static Color get iconColor =>
       isLightTheme ? AppColors.darkSurface : AppColors.lightSurface;
 

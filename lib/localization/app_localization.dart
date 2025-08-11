@@ -21,7 +21,16 @@ abstract class AppLocalization extends BaseLocalization {
   String get doNotHaveAccount;
 
   String get signUp;
+
   String get emailNotEmpty;
+
   String get emailNotValid;
+
   String get passwordNotEmpty;
+
+  String get passwordNotStrong;
+
+  String get username;
+
+  String get usernameEmpty;
 }
