@@ -6,12 +6,12 @@ import '../../core/regex.dart';
 import '../../core/routes.dart';
 import '../../localization/app_localization.dart';
 import '../../services/firebase/auth_service.dart';
+import '../../services/user/user_service.dart';
 import 'login_contract.dart';
 
 @injectable
 class LoginBloc extends BaseBloc<LoginEvent, LoginData> {
-  LoginBloc(this._firebaseAuthService)
-    : super(initState) {
+  LoginBloc(this._firebaseAuthService, this._userService) : super(initState) {
     on<InitLoginEvent>(_initLoginEvent);
     on<LoginTapEvent>(_loginTapEvent);
     on<GoogleTapEvent>(_googleTapEvent);
@@ -20,6 +20,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginData> {
   }
 
   final FirebaseAuthService _firebaseAuthService;
+  final UserService _userService;
 
   static LoginData get initState =>
       (LoginDataBuilder()
@@ -54,9 +55,10 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginData> {
             state.emailController.text,
             state.passwordController.text,
           )
-          .then((response) {
+          .then((response) async {
             if (response != null) {
-              printLog(message: response);
+              await _userService.setUserLoggedIn();
+              dispatchViewEvent(NavigateScreen(AppRoutes.homeScreen));
             }
           })
           .catchError((error) {
@@ -70,8 +72,9 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginData> {
     add(UpdateLoginState(state.rebuild((u) => u.isButtonLoading = true)));
     await _firebaseAuthService
         .signInWithGoogle()
-        .then((response) {
+        .then((response) async {
           if (response != null) {
+            await _userService.setUserLoggedIn();
             dispatchViewEvent(NavigateScreen(AppRoutes.homeScreen));
           }
         })

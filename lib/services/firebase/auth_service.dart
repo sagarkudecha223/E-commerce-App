@@ -18,23 +18,41 @@ class FirebaseAuthService {
   User? get currentUser => _auth.currentUser;
 
   Future<bool> isNetworkConnected() async =>
-      await getIt.get<NetworkInfoImpl>().isConnected;
+      await getIt
+          .get<NetworkInfoImpl>()
+          .isConnected;
 
-  Future<User?> signUpWithEmail(String email, String password) async {
+  Future<User?> signUpWithEmail(String email,
+      String password,
+      String userName,) async {
     if (await isNetworkConnected()) {
-      final result = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      try {
+        final result = await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        if (result.user != null) {
+          await _createUserProfileIfNotExists(result.user!, userName);
+        }
 
-      if (result.user != null) {
-        await _createUserProfileIfNotExists(result.user!);
+        return result.user;
+      } on FirebaseAuthException catch (e) {
+        switch (e.code) {
+          case 'weak-password':
+            throw AuthException('Password must be at least 6 characters.');
+          case 'email-already-in-use':
+            throw AuthException('This email is already registered.');
+          case 'invalid-email':
+            throw AuthException('Please enter a valid email.');
+          default:
+            throw AuthException('Sign up failed: ${e.message}');
+        }
       }
-
-      return result.user;
     } else {
-      throw AuthException(
-        AppLocalization.currentLocalization().noInternetConnection,
+      throw Exception(
+        AppLocalization
+            .currentLocalization()
+            .noInternetConnection,
       );
     }
   }
@@ -48,7 +66,7 @@ class FirebaseAuthService {
         );
 
         if (result.user != null) {
-          await _createUserProfileIfNotExists(result.user!);
+          await _createUserProfileIfNotExists(result.user!, '');
         }
 
         return result.user;
@@ -69,7 +87,9 @@ class FirebaseAuthService {
       }
     } else {
       throw AuthException(
-        AppLocalization.currentLocalization().noInternetConnection,
+        AppLocalization
+            .currentLocalization()
+            .noInternetConnection,
       );
     }
   }
@@ -80,7 +100,7 @@ class FirebaseAuthService {
       if (googleUser == null) return null;
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -90,25 +110,28 @@ class FirebaseAuthService {
       final result = await _auth.signInWithCredential(credential);
 
       if (result.user != null) {
-        await _createUserProfileIfNotExists(result.user!);
+        await _createUserProfileIfNotExists(result.user!, '');
       }
 
       return result.user;
     } else {
       throw AuthException(
-        AppLocalization.currentLocalization().noInternetConnection,
+        AppLocalization
+            .currentLocalization()
+            .noInternetConnection,
       );
     }
   }
 
-  Future<void> _createUserProfileIfNotExists(User user) async {
+  Future<void> _createUserProfileIfNotExists(User user,
+      String? userName,) async {
     final userRef = _db.child("users").child(user.uid);
     final snapshot = await userRef.get();
 
     if (!snapshot.exists) {
       await userRef.set({
         "uid": user.uid,
-        "name": user.displayName ?? "",
+        "name": user.displayName ?? userName,
         "email": user.email ?? "",
         "photoUrl": user.photoURL ?? "",
         "favorites": {}, // empty map for favorite items

@@ -4,13 +4,12 @@ import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../bloc/login/login_bloc.dart';
-import '../../bloc/login/login_contract.dart';
+import '../../bloc/sign_up/sign_up_bloc.dart';
+import '../../bloc/sign_up/sign_up_contract.dart';
 import '../../core/colors.dart';
 import '../../core/constants.dart';
 import '../../core/dimens.dart';
 import '../../core/routes.dart';
-import '../../core/styles.dart';
 import '../../core/toast.dart';
 import '../../localization/app_localization.dart';
 import '../common/app_bar.dart';
@@ -20,20 +19,20 @@ import '../common/buttons/elevated_button.dart';
 import '../common/text_field.dart';
 import '../decoration/screen_background.dart';
 import '../full_screen_error/full_screen_error.dart';
-import '../sign_up/sign_up_screen.dart';
+import '../login/login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends BaseState<LoginBloc, LoginScreen> {
+class _SignUpScreenState extends BaseState<SignUpBloc, SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    bloc.add(InitLoginEvent());
+    bloc.add(InitSignUpEvent());
   }
 
   @override
@@ -59,14 +58,11 @@ class _LoginScreenState extends BaseState<LoginBloc, LoginScreen> {
 
   void _buildHandleActionEvent(NavigateScreen screen) {
     switch (screen.target) {
-      case AppRoutes.signUpScreen:
-        navigatorKey.currentContext?.push(
-          builder: (context) => SignUpScreen(),
+      case AppRoutes.homeScreen:
+        navigatorKey.currentContext?.pushAndRemoveUntil(
+          builder: (context) => LoginScreen(),
           settings: RouteSettings(name: screen.target),
         );
-        break;
-      case AppRoutes.homeScreen:
-        break;
     }
   }
 
@@ -74,11 +70,11 @@ class _LoginScreenState extends BaseState<LoginBloc, LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackGroundColor,
-      appBar: CommonAppBar(title: AppLocalization.currentLocalization().logIn),
+      appBar: CommonAppBar(title: AppLocalization.currentLocalization().signUp),
       body: SafeArea(
-        child: BlocProvider<LoginBloc>(
+        child: BlocProvider<SignUpBloc>(
           create: (_) => bloc,
-          child: BlocBuilder<LoginBloc, LoginData>(
+          child: BlocBuilder<SignUpBloc, SignUpData>(
             builder: (_, __) => _MainContent(bloc: bloc),
           ),
         ),
@@ -90,7 +86,7 @@ class _LoginScreenState extends BaseState<LoginBloc, LoginScreen> {
 class _MainContent extends StatelessWidget {
   const _MainContent({required this.bloc});
 
-  final LoginBloc bloc;
+  final SignUpBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -98,20 +94,22 @@ class _MainContent extends StatelessWidget {
       case ScreenState.loading:
         return const AppLoader();
       case ScreenState.content:
-        return _LoginContent(bloc: bloc);
+        return _SignUpContent(bloc: bloc);
       default:
         return FullScreenError(
           message: bloc.state.errorMessage!,
-          onRetryTap: () {},
+          onRetryTap: () {
+            /// NOTE : retry event : bloc.add(<event_name>)
+          },
         );
     }
   }
 }
 
-class _LoginContent extends StatelessWidget {
-  final LoginBloc bloc;
+class _SignUpContent extends StatelessWidget {
+  final SignUpBloc bloc;
 
-  const _LoginContent({required this.bloc});
+  const _SignUpContent({required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +121,12 @@ class _LoginContent extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _WelcomeText(),
-            const Gap(Dimens.space4xLarge),
+            const Gap(Dimens.spaceXLarge),
+            _TextField(
+              title: AppLocalization.currentLocalization().username,
+              controller: bloc.state.usernameController,
+            ),
+            const Gap(Dimens.spaceXLarge),
             _TextField(
               title: AppLocalization.currentLocalization().email,
               controller: bloc.state.emailController,
@@ -136,48 +138,13 @@ class _LoginContent extends StatelessWidget {
               obscureText: true,
             ),
             const Gap(Dimens.space4xLarge),
-            _LoginButton(
-              onTap: () => bloc.add(LoginTapEvent()),
+            _SignUpButton(
+              onTap: () => bloc.add(SignUpTapEvent()),
               isLoading: bloc.state.isButtonLoading,
             ),
             const Gap(Dimens.spaceLarge),
-            _GoogleButton(
-              onTap: () => bloc.add(GoogleTapEvent()),
-              isLoading: bloc.state.isButtonLoading,
-            ),
-            const Gap(Dimens.spaceLarge),
-            _SignUpText(onTap: () => bloc.add(SignUpTapEvent())),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _WelcomeText extends StatelessWidget {
-  const _WelcomeText();
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocalization.currentLocalization().welcome,
-            style: AppFontTextStyles.textStyleBold().copyWith(
-              fontSize: Dimens.fontSizeEighteen,
-              color: AppColors.primaryOrange,
-            ),
-          ),
-          const Gap(Dimens.spaceSmall),
-          Text(
-            AppLocalization.currentLocalization().welcomeText2,
-            style: AppFontTextStyles.textStyleSmall(),
-          ),
-        ],
       ),
     );
   }
@@ -213,64 +180,18 @@ class _TextField extends StatelessWidget {
   }
 }
 
-class _LoginButton extends StatelessWidget {
+class _SignUpButton extends StatelessWidget {
   final Function() onTap;
   final bool isLoading;
 
-  const _LoginButton({required this.onTap, required this.isLoading});
+  const _SignUpButton({required this.onTap, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
     return AppElevatedButton(
-      title: AppLocalization.currentLocalization().logIn,
+      title: AppLocalization.currentLocalization().signUp,
       onTap: onTap,
       isLoading: isLoading,
-    );
-  }
-}
-
-class _GoogleButton extends StatelessWidget {
-  final Function() onTap;
-  final bool isLoading;
-
-  const _GoogleButton({required this.onTap, required this.isLoading});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppElevatedButton(
-      title: AppLocalization.currentLocalization().signUpWithGoogle,
-      onTap: onTap,
-      isLoading: isLoading,
-    );
-  }
-}
-
-class _SignUpText extends StatelessWidget {
-  final Function() onTap;
-
-  const _SignUpText({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          AppLocalization.currentLocalization().doNotHaveAccount,
-          style: AppFontTextStyles.textStyleMedium(),
-        ),
-        const Gap(Dimens.space3xSmall),
-        InkWell(
-          onTap: onTap,
-          child: Text(
-            AppLocalization.currentLocalization().signUp,
-            style: AppFontTextStyles.textStyleMedium().copyWith(
-              color: AppColors.primaryOrange,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

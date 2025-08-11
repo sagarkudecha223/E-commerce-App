@@ -175,6 +175,7 @@ coverage/
 **/android/key.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -204,6 +205,7 @@ coverage/
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+ios/Runner/GoogleService-Info.plist
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -457,7 +459,7 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 #Generated
-#*.g.dart
+*.g.dart
 *.mocks.dart
 
 

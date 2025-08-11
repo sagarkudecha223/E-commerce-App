@@ -61,4 +61,13 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get passwordNotEmpty => 'Password should not be blank';
+
+  @override
+  String get passwordNotStrong => 'Password must be at least 6 characters.';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get usernameEmpty => 'Username should not be blank';
 }
