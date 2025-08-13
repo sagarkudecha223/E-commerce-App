@@ -4,9 +4,9 @@ import '../../core/colors.dart';
 import '../../core/dimens.dart';
 
 class ScreenBackground extends BoxDecoration {
-  ScreenBackground()
+  ScreenBackground({Color? backgroundColor})
     : super(
-        color: AppColors.backgroundColor,
+        color: backgroundColor ?? AppColors.backgroundColor,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(Dimens.radius2xLarge),
           topRight: Radius.circular(Dimens.radius2xLarge),

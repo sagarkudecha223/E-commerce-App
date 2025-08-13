@@ -70,4 +70,33 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get usernameEmpty => 'Username should not be blank';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get cart => 'Cart';
+
+  @override
+  String get favorite => 'Favorite';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get deliveryAddress => 'Delivery Address';
+
+  @override
+  String get setting => 'Setting';
+
+  @override
+  String get contactUs => 'Contact Us';
+  @override
+  String get logout => 'Log out';
 }

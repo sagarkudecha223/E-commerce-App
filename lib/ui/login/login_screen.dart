@@ -20,6 +20,7 @@ import '../common/buttons/elevated_button.dart';
 import '../common/text_field.dart';
 import '../decoration/screen_background.dart';
 import '../full_screen_error/full_screen_error.dart';
+import '../home/home_screen.dart';
 import '../sign_up/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -66,6 +67,10 @@ class _LoginScreenState extends BaseState<LoginBloc, LoginScreen> {
         );
         break;
       case AppRoutes.homeScreen:
+        navigatorKey.currentContext?.pushAndRemoveUntil(
+          builder: (context) => HomeScreen(),
+          settings: RouteSettings(name: screen.target),
+        );
         break;
     }
   }

@@ -58,7 +58,7 @@ class _SignUpScreenState extends BaseState<SignUpBloc, SignUpScreen> {
 
   void _buildHandleActionEvent(NavigateScreen screen) {
     switch (screen.target) {
-      case AppRoutes.homeScreen:
+      case AppRoutes.loginScreen:
         navigatorKey.currentContext?.pushAndRemoveUntil(
           builder: (context) => LoginScreen(),
           settings: RouteSettings(name: screen.target),

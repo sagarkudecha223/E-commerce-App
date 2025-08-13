@@ -3,3 +3,8 @@
 enum SharedPreferenceStore { IS_USER_LOGGED_IN, USER_INFO, IS_DARK_THEME }
 
 enum AppLoaderTheme { light, dark }
+
+enum BottomNavigationOptions { shop, explore, cart, favourite, profile }
+
+enum DrawerOptions { profile, myOrders, deliveryAddress, contactUs, settings,
+  logout }
