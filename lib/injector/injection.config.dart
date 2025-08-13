@@ -16,6 +16,7 @@ import 'package:bloc_base_architecture/imports/core_imports.dart' as _i874;
 import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
+import 'package:demo_app/bloc/home/home_bloc.dart' as _i892;
 import 'package:demo_app/bloc/login/login_bloc.dart' as _i197;
 import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
 import 'package:demo_app/bloc/sign_up/sign_up_bloc.dart' as _i1060;
@@ -45,11 +46,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.baseArchController,
     );
     gh.singleton<_i921.NetworkInfoImpl>(() => registerModule.networkInfoImpl);
-    gh.singleton<_i265.FirebaseAuthService>(() => _i265.FirebaseAuthService());
     gh.singleton<_i693.FirebaseDataService>(() => _i693.FirebaseDataService());
-    gh.factory<_i1060.SignUpBloc>(
-      () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),
-    );
     gh.singleton<_i338.BaseArchConfig>(
       () => _i338.BaseArchConfig(gh<_i345.BaseArchController>()),
     );
@@ -65,8 +62,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i800.UserService>(
       () => _i800.UserService(gh<_i931.PreferenceStore>()),
     );
+    gh.singleton<_i265.FirebaseAuthService>(
+      () => _i265.FirebaseAuthService(gh<_i800.UserService>()),
+    );
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),
+    );
+    gh.factory<_i892.HomeBloc>(() => _i892.HomeBloc(gh<_i800.UserService>()));
+    gh.factory<_i1060.SignUpBloc>(
+      () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),
     );
     gh.factory<_i197.LoginBloc>(
       () => _i197.LoginBloc(

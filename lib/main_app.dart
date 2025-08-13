@@ -8,6 +8,7 @@ import 'core/constants.dart';
 import 'injector/injection.dart';
 import 'services/theme_service/app_theme.dart';
 import 'services/theme_service/theme_service.dart';
+import 'ui/home/home_screen.dart';
 import 'ui/login/login_screen.dart';
 
 class MainAppScreen extends StatefulWidget {
@@ -57,7 +58,7 @@ class _MainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (bloc.state.state) {
       case ScreenState.content:
-        return LoginScreen();
+        return bloc.state.isLoggedIn ? HomeScreen() : LoginScreen();
       default:
         return Center(child: CircularProgressIndicator());
     }

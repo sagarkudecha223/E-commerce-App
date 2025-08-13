@@ -33,4 +33,24 @@ abstract class AppLocalization extends BaseLocalization {
   String get username;
 
   String get usernameEmpty;
+
+  String get home;
+
+  String get explore;
+
+  String get cart;
+
+  String get favorite;
+
+  String get profile;
+
+  String get myOrders;
+
+  String get deliveryAddress;
+
+  String get setting;
+
+  String get contactUs;
+
+  String get logout;
 }

@@ -36,7 +36,7 @@ class AppIconButton extends StatelessWidget {
     this.imageColor = AppColors.primaryOrange,
     this.borderColor = AppColors.primaryOrange,
     this.borderWidth = Dimens.borderWidthSmall,
-    this.borderRadius = Dimens.radius3xLarge,
+    this.borderRadius = Dimens.radiusMedium,
     this.isEnabled = true,
     this.loadingWidget,
   });
@@ -52,29 +52,31 @@ class AppIconButton extends StatelessWidget {
         padding: const EdgeInsets.all(Dimens.padding2xSmall),
         shape: RoundedRectangleBorder(
           side: BorderSide(
-              color: borderColor,
-              width: borderWidth,
-              style: hasBorder || isLoading
-                  ? BorderStyle.solid
-                  : BorderStyle.none),
+            color: borderColor,
+            width: borderWidth,
+            style:
+                hasBorder || isLoading ? BorderStyle.solid : BorderStyle.none,
+          ),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
-      icon: isLoading
-          ? SizedBox(
-              width: Dimens.iconXSmall,
-              height: Dimens.iconXSmall,
-              child: loadingWidget ?? const AppLoader(),
-            )
-          : IgnorePointer(
-            child: iconWidget ??
-                _SvgIcon(
-                  image: svgImage!,
-                  color: imageColor,
-                  imageHeight: imageHeight,
-                  imageWidth: imageWidth,
-                ),
-          ),
+      icon:
+          isLoading
+              ? SizedBox(
+                width: Dimens.iconXSmall,
+                height: Dimens.iconXSmall,
+                child: loadingWidget ?? const AppLoader(),
+              )
+              : IgnorePointer(
+                child:
+                    iconWidget ??
+                    _SvgIcon(
+                      image: svgImage!,
+                      color: imageColor,
+                      imageHeight: imageHeight,
+                      imageWidth: imageWidth,
+                    ),
+              ),
     );
   }
 }

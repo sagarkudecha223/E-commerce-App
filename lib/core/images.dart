@@ -7,4 +7,14 @@ class Images {
   static const backArrow = '${_directory}back_arrow.svg';
   static const downArrow = '${_directory}down_arrow.svg';
   static const cancel = '${_directory}cancel.svg';
+  static const cart = '${_directory}cart.svg';
+  static const profile = '${_directory}profile.svg';
+  static const home = '${_directory}home.svg';
+  static const dish = '${_directory}dish.svg';
+  static const favorite = '${_directory}favorite.svg';
+  static const contact = '${_directory}contact.svg';
+  static const location = '${_directory}location.svg';
+  static const orders = '${_directory}orders.svg';
+  static const settings = '${_directory}settings.svg';
+  static const logout = '${_directory}logout.svg';
 }

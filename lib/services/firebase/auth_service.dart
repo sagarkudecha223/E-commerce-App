@@ -6,13 +6,17 @@ import 'package:injectable/injectable.dart';
 
 import '../../injector/injection.dart';
 import '../../localization/app_localization.dart';
+import '../../model/user_model.dart';
+import '../user/user_service.dart';
 
 @singleton
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _db = FirebaseDatabase.instance.ref();
+  final UserService _userService;
 
-  // Stream of auth state changes
+  FirebaseAuthService(this._userService);
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   User? get currentUser => _auth.currentUser;
@@ -64,9 +68,18 @@ class FirebaseAuthService {
           email: email,
           password: password,
         );
-
-        if (result.user != null) {
-          await _createUserProfileIfNotExists(result.user!, '');
+        final user = result.user;
+        if (user != null) {
+          await _createUserProfileIfNotExists(user, '');
+          await _userService.saveUser(
+            UserModel(
+              name: user.displayName ?? '',
+              email: user.email ?? '',
+              profilePhotoUrl: user.photoURL ?? '',
+              uid: user.uid,
+            ),
+          );
+          await _userService.setUserLoggedIn();
         }
 
         return result.user;
@@ -108,9 +121,18 @@ class FirebaseAuthService {
       );
 
       final result = await _auth.signInWithCredential(credential);
-
-      if (result.user != null) {
-        await _createUserProfileIfNotExists(result.user!, '');
+      final user = result.user;
+      if (user != null) {
+        await _createUserProfileIfNotExists(user, '');
+        await _userService.saveUser(
+          UserModel(
+            name: user.displayName ?? '',
+            email: user.email ?? '',
+            profilePhotoUrl: user.photoURL ?? '',
+            uid: user.uid,
+          ),
+        );
+        await _userService.setUserLoggedIn();
       }
 
       return result.user;
@@ -134,7 +156,7 @@ class FirebaseAuthService {
         "name": user.displayName ?? userName,
         "email": user.email ?? "",
         "photoUrl": user.photoURL ?? "",
-        "favorites": {}, // empty map for favorite items
+        "favorites": {},
         "createdAt": DateTime.now().toIso8601String(),
       });
     }
