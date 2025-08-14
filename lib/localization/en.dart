@@ -97,6 +97,22 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get contactUs => 'Contact Us';
+
   @override
   String get logout => 'Log out';
+
+  @override
+  String get snacks => 'Snacks';
+
+  @override
+  String get meal => 'Meal';
+
+  @override
+  String get vegan => 'Vegan';
+
+  @override
+  String get desert => 'Desert';
+
+  @override
+  String get drinks => 'Drinks';
 }
