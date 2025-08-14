@@ -17,4 +17,9 @@ class Images {
   static const orders = '${_directory}orders.svg';
   static const settings = '${_directory}settings.svg';
   static const logout = '${_directory}logout.svg';
+  static const desert = '${_directory}desert.svg';
+  static const drinks = '${_directory}drinks.svg';
+  static const meal = '${_directory}meal.svg';
+  static const snacks = '${_directory}snacks.svg';
+  static const vegan = '${_directory}vegan.svg';
 }

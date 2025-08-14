@@ -107,3 +107,35 @@ extension DrawerOptionsExtension on DrawerOptions {
     }
   }
 }
+
+extension FoodMenuOptionsExtension on FoodMenuOptions {
+  String get title {
+    switch (this) {
+      case FoodMenuOptions.snacks:
+        return AppLocalization.currentLocalization().snacks;
+      case FoodMenuOptions.meal:
+        return AppLocalization.currentLocalization().meal;
+      case FoodMenuOptions.vegan:
+        return AppLocalization.currentLocalization().vegan;
+      case FoodMenuOptions.desert:
+        return AppLocalization.currentLocalization().desert;
+      case FoodMenuOptions.drinks:
+        return AppLocalization.currentLocalization().drinks;
+    }
+  }
+
+  String get icon {
+    switch (this) {
+      case FoodMenuOptions.snacks:
+        return Images.snacks;
+      case FoodMenuOptions.meal:
+        return Images.meal;
+      case FoodMenuOptions.vegan:
+        return Images.vegan;
+      case FoodMenuOptions.desert:
+        return Images.desert;
+      case FoodMenuOptions.drinks:
+        return Images.drinks;
+    }
+  }
+}

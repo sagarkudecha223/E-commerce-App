@@ -18,6 +18,8 @@ import '../common/buttons/icon_button.dart';
 import '../common/svg_icon.dart';
 import '../decoration/screen_background.dart';
 import '../full_screen_error/full_screen_error.dart';
+import '../shop/explore/explore_screen.dart';
+import '../shop/shop_screen.dart';
 import 'drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -87,8 +89,10 @@ class _HomeContent extends StatelessWidget {
           child: Container(
             decoration: ScreenBackground(),
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Expanded(child: _CenterContent(index: bloc.state.currentIndex)),
+                _CenterContent(index: bloc.state.currentIndex),
+                const Spacer(),
                 _BottomBar(bloc: bloc),
               ],
             ),
@@ -150,7 +154,7 @@ class _CenterContent extends StatelessWidget {
     return LazyLoadIndexedStack(
       index: index,
       preloadIndexes: [0],
-      children: [SizedBox(), SizedBox(), SizedBox(), SizedBox(), SizedBox()],
+      children: [ShopScreen(), ExploreScreen(), SizedBox(), SizedBox(), SizedBox()],
     );
   }
 }

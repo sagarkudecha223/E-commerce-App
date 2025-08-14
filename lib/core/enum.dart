@@ -6,5 +6,13 @@ enum AppLoaderTheme { light, dark }
 
 enum BottomNavigationOptions { shop, explore, cart, favourite, profile }
 
-enum DrawerOptions { profile, myOrders, deliveryAddress, contactUs, settings,
-  logout }
+enum DrawerOptions {
+  profile,
+  myOrders,
+  deliveryAddress,
+  contactUs,
+  settings,
+  logout,
+}
+
+enum FoodMenuOptions { snacks, meal, vegan, desert, drinks }

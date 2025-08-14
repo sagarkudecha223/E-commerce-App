@@ -1,19 +1,22 @@
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:injectable/injectable.dart';
 import '../../core/enum.dart';
+import '../../services/notifiers/notifiers.dart';
 import '../../services/user/user_service.dart';
 import 'home_contract.dart';
 
 @injectable
 class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
-  HomeBloc(this._userService) : super(initState) {
+  HomeBloc(this._userService, this._valueNotifiers) : super(initState) {
     on<InitHomeEvent>(_initHomeEvent);
     on<BottomItemTapEvent>(_bottomItemTapEvent);
     on<DrawerOptionTapEvent>(_drawerOptionTapEvent);
     on<UpdateHomeState>((event, emit) => emit(event.state));
+    _observeNotifiers();
   }
 
   final UserService _userService;
+  final ValueNotifiers _valueNotifiers;
 
   static HomeData get initState =>
       (HomeDataBuilder()
@@ -49,4 +52,57 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
       case DrawerOptions.logout:
     }
   }
+
+  _observeNotifiers() {
+    if (state.currentIndex == 0) {
+      _valueNotifiers.foodMenuStreamer.stream.listen(
+        (event) => add(
+          BottomItemTapEvent(index: BottomNavigationOptions.explore.index),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _valueNotifiers.foodMenuStreamer.close();
+    return super.close();
+  }
 }
+/*
+
+
+class FoodMenuView extends StatelessWidget {
+  final bool viewOnly;
+
+  const FoodMenuView({super.key, required this.viewOnly});
+
+  @override
+  Widget build(BuildContext context) {
+    final foodMenu = getIt.get<ValueNotifiers>().foodMenuStreamer;
+
+    return StreamBuilder(
+      stream: foodMenu.stream,
+      builder: (context, snapshot) {
+        return Container(
+          margin: EdgeInsets.only(top: Dimens.spaceSmall),
+          decoration: ScreenBackground(backgroundColor: AppColors.white),
+          padding: EdgeInsets.symmetric(horizontal: Dimens.spaceLarge),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children:
+            FoodMenuOptions.values
+                .map(
+                  (item) => _IconButton(
+                onTap: () => foodMenu.add(item),
+                isSelected: viewOnly ? false : snapshot.data == item,
+                item: item,
+              ),
+            )
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+}*/
