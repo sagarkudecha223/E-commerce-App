@@ -23,9 +23,14 @@ class FoodMenuView extends StatefulWidget {
   State<FoodMenuView> createState() => _FoodMenuViewState();
 }
 
-class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView> {
+class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView>  with AutomaticKeepAliveClientMixin{
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final foodMenu = getIt.get<ValueNotifiers>().foodMenuStreamer;
     return BlocProvider<FoodMenuBloc>(
       create: (_) => bloc,

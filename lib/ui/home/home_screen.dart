@@ -19,6 +19,7 @@ import '../common/svg_icon.dart';
 import '../decoration/screen_background.dart';
 import '../full_screen_error/full_screen_error.dart';
 import '../shop/explore/explore_screen.dart';
+import '../shop/food_menu/food_menu_view.dart';
 import '../shop/shop_screen.dart';
 import 'drawer.dart';
 
@@ -91,6 +92,9 @@ class _HomeContent extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                FoodMenuView(
+                  viewOnly: bloc.state.currentIndex == 0 ? true : false,
+                ),
                 _CenterContent(index: bloc.state.currentIndex),
                 const Spacer(),
                 _BottomBar(bloc: bloc),
@@ -154,7 +158,13 @@ class _CenterContent extends StatelessWidget {
     return LazyLoadIndexedStack(
       index: index,
       preloadIndexes: [0],
-      children: [ShopScreen(), ExploreScreen(), SizedBox(), SizedBox(), SizedBox()],
+      children: [
+        ShopScreen(),
+        ExploreScreen(),
+        SizedBox(),
+        SizedBox(),
+        SizedBox(),
+      ],
     );
   }
 }
