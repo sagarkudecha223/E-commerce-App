@@ -5,7 +5,6 @@ import '../../../bloc/shop/explore/explore_bloc.dart';
 import '../../../bloc/shop/explore/explore_contract.dart';
 import '../../common/app_loader.dart';
 import '../../full_screen_error/full_screen_error.dart';
-import '../food_menu/food_menu_view.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -60,6 +59,6 @@ class _ExploreContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [FoodMenuView(viewOnly: false)]);
+    return Column(children: []);
   }
 }
