@@ -2,6 +2,7 @@ import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gap/gap.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 
 import '../../bloc/home/home_bloc.dart';
@@ -92,8 +93,28 @@ class _HomeContent extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                FoodMenuView(
-                  viewOnly: bloc.state.currentIndex == 0 ? true : false,
+                const Gap(Dimens.spaceSmall),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  transitionBuilder:
+                      (child, animation) => ClipRect(
+                        child: SizeTransition(
+                          sizeFactor: animation,
+                          axis: Axis.vertical,
+                          axisAlignment: -1.0,
+                          child: child,
+                        ),
+                      ),
+                  child:
+                      (bloc.state.currentIndex == 0 ||
+                              bloc.state.currentIndex == 1)
+                          ? FoodMenuView(
+                            viewOnly: bloc.state.currentIndex == 0,
+                            key: const ValueKey('menu'),
+                          )
+                          : const SizedBox.shrink(key: ValueKey('empty')),
                 ),
                 _CenterContent(index: bloc.state.currentIndex),
                 const Spacer(),
@@ -161,9 +182,9 @@ class _CenterContent extends StatelessWidget {
       children: [
         ShopScreen(),
         ExploreScreen(),
-        SizedBox(),
-        SizedBox(),
-        SizedBox(),
+        const SizedBox(),
+        const SizedBox(),
+        const SizedBox(),
       ],
     );
   }

@@ -8,6 +8,8 @@ abstract class AppLocalization extends BaseLocalization {
 
   String get logIn;
 
+  String get retry;
+
   String get welcome;
 
   String get email;

@@ -26,6 +26,9 @@ class EnglishLocalization extends AppLocalization {
   @override
   String get connectionError => 'Connection error';
 
+  @override
+  String get retry => 'Retry';
+
   /// Login
 
   @override

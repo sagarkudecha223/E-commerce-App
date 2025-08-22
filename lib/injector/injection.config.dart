@@ -26,6 +26,7 @@ import 'package:demo_app/core/cache/preference_store.dart' as _i931;
 import 'package:demo_app/injector/injection.dart' as _i609;
 import 'package:demo_app/services/firebase/auth_service.dart' as _i265;
 import 'package:demo_app/services/firebase/firebase_data_service.dart' as _i693;
+import 'package:demo_app/services/map/map_service.dart' as _i205;
 import 'package:demo_app/services/notifiers/notifiers.dart' as _i192;
 import 'package:demo_app/services/theme_service/theme_service.dart' as _i1058;
 import 'package:demo_app/services/user/user_service.dart' as _i800;
@@ -41,15 +42,16 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    gh.factory<_i421.ExploreBloc>(() => _i421.ExploreBloc());
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => registerModule.prefs,
       preResolve: true,
     );
-    gh.factory<_i421.ExploreBloc>(() => _i421.ExploreBloc());
     gh.singleton<_i874.BaseArchController>(
       () => registerModule.baseArchController,
     );
     gh.singleton<_i921.NetworkInfoImpl>(() => registerModule.networkInfoImpl);
+    gh.singleton<_i205.AppMapController>(() => _i205.AppMapController());
     gh.singleton<_i693.FirebaseDataService>(() => _i693.FirebaseDataService());
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
     gh.factory<_i36.FoodMenuBloc>(

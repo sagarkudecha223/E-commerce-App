@@ -1,8 +1,11 @@
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../bloc/full_screen_error/full_screen_error_bloc.dart';
 import '../../bloc/full_screen_error/full_screen_error_contractor.dart';
+import '../../core/dimens.dart';
+import '../../localization/app_localization.dart';
 
 class FullScreenError extends StatefulWidget {
   final String title;
@@ -24,7 +27,6 @@ class FullScreenError extends StatefulWidget {
 
 class _FullScreenErrorState
     extends BaseState<FullScreenErrorBloc, FullScreenError> {
-  // _FullScreenErrorState() : super(getIt.get<FullScreenErrorBloc>());
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +38,10 @@ class _FullScreenErrorState
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Text(widget.title, textAlign: TextAlign.center),
-            const SizedBox(height: 35),
+            const Gap(Dimens.space4xLarge),
             ElevatedButton(
               onPressed: widget.onRetryTap as void Function()?,
-              child: const Text('Retry'),
+              child: Text(AppLocalization.currentLocalization().retry),
             ),
           ],
         ),
