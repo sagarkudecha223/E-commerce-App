@@ -30,10 +30,4 @@ class FoodMenuBloc extends BaseBloc<FoodMenuEvent, FoodMenuData> {
       );
     });
   }
-
-  @override
-  Future<void> close() {
-    _valueNotifiers.foodMenuStreamer.close();
-    return super.close();
-  }
 }

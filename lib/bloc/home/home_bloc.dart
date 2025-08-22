@@ -62,10 +62,4 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
       );
     }
   }
-
-  @override
-  Future<void> close() {
-    _valueNotifiers.foodMenuStreamer.close();
-    return super.close();
-  }
 }

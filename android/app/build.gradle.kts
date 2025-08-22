@@ -4,6 +4,16 @@ plugins {
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
+import java . util . Properties
+
+val envProperties = Properties()
+val envFile = rootProject.file(".env")
+
+if (envFile.exists()) {
+    envFile.inputStream().use { stream ->
+        envProperties.load(stream)
+    }
+}
 
 android {
     namespace = "com.example.demo_app"
@@ -27,6 +37,8 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+
+        manifestPlaceholders["MAPS_API_KEY"] = envProperties.getProperty("MAPS_API_KEY") ?: ""
     }
 
     buildTypes {

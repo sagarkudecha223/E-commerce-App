@@ -23,14 +23,9 @@ class FoodMenuView extends StatefulWidget {
   State<FoodMenuView> createState() => _FoodMenuViewState();
 }
 
-class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView>  with AutomaticKeepAliveClientMixin{
-
-  @override
-  bool get wantKeepAlive => true;
-
+class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final foodMenu = getIt.get<ValueNotifiers>().foodMenuStreamer;
     return BlocProvider<FoodMenuBloc>(
       create: (_) => bloc,
@@ -40,7 +35,6 @@ class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView>  with Aut
               stream: foodMenu.stream,
               builder:
                   (context, snapshot) => Container(
-                    margin: EdgeInsets.only(top: Dimens.spaceSmall),
                     decoration: ScreenBackground(
                       backgroundColor: AppColors.white,
                     ),
