@@ -2,6 +2,7 @@ import 'package:bloc_base_architecture/core/screen_state.dart';
 import 'package:built_value/built_value.dart';
 
 import '../../../core/enum.dart';
+import '../../../model/item_model.dart';
 
 part 'explore_contract.g.dart';
 
@@ -14,6 +15,8 @@ abstract class ExploreData implements Built<ExploreData, ExploreDataBuilder> {
   ScreenState get state;
 
   FoodMenuOptions get foodMenu;
+
+  List<ItemModel> get allItems;
 
   String? get errorMessage;
 }

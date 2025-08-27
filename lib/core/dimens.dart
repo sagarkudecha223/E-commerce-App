@@ -2,6 +2,7 @@ class Dimens {
 
   //common space
   static const double spaceMin = 1;
+  static const double space5xSmall = 2;
   static const double space4xSmall = 4;
   static const double space3xSmall = 6;
   static const double space2xSmall = 8;

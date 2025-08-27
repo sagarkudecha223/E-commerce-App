@@ -21,7 +21,8 @@ Future<void> configureDependencies() async {
 @module
 abstract class RegisterModule {
   @preResolve
-  Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+  Future<SharedPreferences> get prefs async =>
+      await SharedPreferences.getInstance();
 
   @singleton
   BaseArchController get baseArchController => BaseArchController();

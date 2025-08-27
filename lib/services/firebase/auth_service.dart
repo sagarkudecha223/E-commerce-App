@@ -1,6 +1,5 @@
 import 'package:bloc_base_architecture/api/network/network_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 
@@ -8,14 +7,15 @@ import '../../injector/injection.dart';
 import '../../localization/app_localization.dart';
 import '../../model/user_model.dart';
 import '../user/user_service.dart';
+import 'firebase_user_data_service.dart';
 
 @singleton
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DatabaseReference _db = FirebaseDatabase.instance.ref();
   final UserService _userService;
+  final FirebaseUserDataService _firebaseUserDataService;
 
-  FirebaseAuthService(this._userService);
+  FirebaseAuthService(this._userService, this._firebaseUserDataService);
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -147,18 +147,11 @@ class FirebaseAuthService {
 
   Future<void> _createUserProfileIfNotExists(User user,
       String? userName,) async {
-    final userRef = _db.child("users").child(user.uid);
-    final snapshot = await userRef.get();
+    final userRef = await _firebaseUserDataService.userExists();
 
-    if (!snapshot.exists) {
-      await userRef.set({
-        "uid": user.uid,
-        "name": user.displayName ?? userName,
-        "email": user.email ?? "",
-        "photoUrl": user.photoURL ?? "",
-        "favorites": {},
-        "createdAt": DateTime.now().toIso8601String(),
-      });
+    if (!userRef) {
+      await _firebaseUserDataService.saveUserProfile(
+          user: user, userName: userName);
     }
   }
 

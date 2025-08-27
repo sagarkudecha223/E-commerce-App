@@ -116,8 +116,15 @@ class _HomeContent extends StatelessWidget {
                           )
                           : const SizedBox.shrink(key: ValueKey('empty')),
                 ),
-                _CenterContent(index: bloc.state.currentIndex),
-                const Spacer(),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.space4xSmall,
+                      horizontal: Dimens.space2xSmall,
+                    ),
+                    child: _CenterContent(index: bloc.state.currentIndex),
+                  ),
+                ),
                 _BottomBar(bloc: bloc),
               ],
             ),
