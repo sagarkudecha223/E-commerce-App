@@ -21,11 +21,14 @@ import 'package:demo_app/bloc/login/login_bloc.dart' as _i197;
 import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
 import 'package:demo_app/bloc/shop/explore/explore_bloc.dart' as _i421;
 import 'package:demo_app/bloc/shop/food_menu/food_menu_bloc.dart' as _i36;
+import 'package:demo_app/bloc/shop/item_card/item_card_bloc.dart' as _i1028;
 import 'package:demo_app/bloc/sign_up/sign_up_bloc.dart' as _i1060;
 import 'package:demo_app/core/cache/preference_store.dart' as _i931;
 import 'package:demo_app/injector/injection.dart' as _i609;
 import 'package:demo_app/services/firebase/auth_service.dart' as _i265;
-import 'package:demo_app/services/firebase/firebase_data_service.dart' as _i693;
+import 'package:demo_app/services/firebase/firebase_item_service.dart' as _i95;
+import 'package:demo_app/services/firebase/firebase_user_data_service.dart'
+    as _i678;
 import 'package:demo_app/services/map/map_service.dart' as _i205;
 import 'package:demo_app/services/notifiers/notifiers.dart' as _i192;
 import 'package:demo_app/services/theme_service/theme_service.dart' as _i1058;
@@ -42,7 +45,6 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
-    gh.factory<_i421.ExploreBloc>(() => _i421.ExploreBloc());
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => registerModule.prefs,
       preResolve: true,
@@ -52,8 +54,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i921.NetworkInfoImpl>(() => registerModule.networkInfoImpl);
     gh.singleton<_i205.AppMapController>(() => _i205.AppMapController());
-    gh.singleton<_i693.FirebaseDataService>(() => _i693.FirebaseDataService());
+    gh.singleton<_i95.FirebaseItemService>(() => _i95.FirebaseItemService());
+    gh.singleton<_i678.FirebaseUserDataService>(
+      () => _i678.FirebaseUserDataService(),
+    );
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
+    gh.factory<_i1028.ItemCardBloc>(
+      () => _i1028.ItemCardBloc(gh<_i95.FirebaseItemService>()),
+    );
     gh.factory<_i36.FoodMenuBloc>(
       () => _i36.FoodMenuBloc(gh<_i192.ValueNotifiers>()),
     );
@@ -66,20 +74,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i931.PreferenceStore>(
       () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
     );
+    gh.factory<_i421.ExploreBloc>(
+      () => _i421.ExploreBloc(
+        gh<_i95.FirebaseItemService>(),
+        gh<_i192.ValueNotifiers>(),
+      ),
+    );
     gh.singleton<_i1058.ThemeService>(
       () => _i1058.ThemeService(gh<_i931.PreferenceStore>()),
     );
     gh.singleton<_i800.UserService>(
       () => _i800.UserService(gh<_i931.PreferenceStore>()),
     );
-    gh.singleton<_i265.FirebaseAuthService>(
-      () => _i265.FirebaseAuthService(gh<_i800.UserService>()),
-    );
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),
     );
-    gh.factory<_i1060.SignUpBloc>(
-      () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),
+    gh.singleton<_i265.FirebaseAuthService>(
+      () => _i265.FirebaseAuthService(
+        gh<_i800.UserService>(),
+        gh<_i678.FirebaseUserDataService>(),
+      ),
     );
     gh.factory<_i892.HomeBloc>(
       () => _i892.HomeBloc(gh<_i800.UserService>(), gh<_i192.ValueNotifiers>()),
@@ -89,6 +103,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i265.FirebaseAuthService>(),
         gh<_i800.UserService>(),
       ),
+    );
+    gh.factory<_i1060.SignUpBloc>(
+      () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),
     );
     return this;
   }

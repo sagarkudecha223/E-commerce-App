@@ -35,11 +35,9 @@ class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView> {
               stream: foodMenu.stream,
               builder:
                   (context, snapshot) => Container(
-                    decoration: ScreenBackground(
-                      backgroundColor: AppColors.white,
-                    ),
+                    decoration: ScreenBackground(),
                     padding: EdgeInsets.symmetric(
-                      horizontal: Dimens.spaceLarge,
+                      horizontal: Dimens.space2xSmall,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
@@ -78,29 +76,37 @@ class _IconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TweenAnimationBuilder<Color?>(
-        tween: ColorTween(
-          begin: AppColors.white,
-          end: isSelected ? AppColors.primaryOrange : AppColors.white,
-        ),
-        duration: isSelected ? Duration(milliseconds: 700) : Duration.zero,
-        builder:
-            (_, color, __) => AppIconButton(
-              borderRadius: Dimens.radius4xLarge,
-              backgroundColor: color,
-              onTap: onTap,
-              iconWidget: Column(
-                children: [
-                  AppSvgIcon(item.icon, height: Dimens.icon6xLarge),
-                  Text(
-                    item.title,
-                    style: AppFontTextStyles.textStyleSmall().copyWith(
-                      color: isSelected ? AppColors.white : AppColors.textColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.space5xSmall),
+        child: TweenAnimationBuilder<Color?>(
+          tween: ColorTween(
+            begin: AppColors.white,
+            end:
+                isSelected
+                    ? AppColors.primaryOrange
+                    : AppColors.backgroundColor,
+          ),
+          duration: isSelected ? Duration(milliseconds: 700) : Duration.zero,
+          builder:
+              (_, color, __) => AppIconButton(
+                borderRadius: Dimens.radius4xLarge,
+                backgroundColor: color,
+                hasBorder: true,
+                onTap: onTap,
+                iconWidget: Column(
+                  children: [
+                    AppSvgIcon(item.icon, height: Dimens.icon6xLarge),
+                    Text(
+                      item.title,
+                      style: AppFontTextStyles.textStyleSmall().copyWith(
+                        color:
+                            isSelected ? AppColors.white : AppColors.textColor,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+        ),
       ),
     );
   }

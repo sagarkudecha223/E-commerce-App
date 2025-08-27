@@ -55,7 +55,8 @@ class AppColors {
   static Color get borderColor =>
       isLightTheme ? lightTextMedium : darkTextMedium;
 
-  static Color get backgroundColor => isLightTheme ? lightSurface : darkSurface;
+  static Color get backgroundColor =>
+      isLightTheme ? lightBackground : darkBackground;
 
   static Color get selectedIconColor =>
       isLightTheme ? lightBackground : darkBackground;
@@ -67,4 +68,7 @@ class AppColors {
       isLightTheme ? lightTextDisabled : darkTextMedium;
 
   static const Color focusedBorderColor = primaryOrange;
+
+  static Color get skeletonBaseColor =>
+      isLightTheme ? darkSurface : lightSurface;
 }
