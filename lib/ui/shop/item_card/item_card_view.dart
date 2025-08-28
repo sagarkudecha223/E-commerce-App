@@ -8,11 +8,14 @@ import '../../../bloc/shop/item_card/item_card_bloc.dart';
 import '../../../bloc/shop/item_card/item_card_contract.dart';
 import '../../../core/colors.dart';
 import '../../../core/dimens.dart';
+import '../../../core/image_converter.dart';
 import '../../../core/images.dart';
 import '../../../core/styles.dart';
 import '../../../model/item_model.dart';
 import '../../common/app_loader.dart';
 import '../../common/buttons/icon_button.dart';
+import '../../common/skeleton/skeleton_item_view.dart';
+import '../../common/skeleton/skeleton_wrapper.dart';
 import '../../decoration/container_decoration.dart';
 import '../../common/svg_icon.dart';
 import '../../full_screen_error/full_screen_error.dart';
@@ -36,7 +39,7 @@ class _ItemCardViewState extends BaseState<ItemCardBloc, ItemCardView> {
   @override
   void didUpdateWidget(covariant ItemCardView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(widget.item != oldWidget.item){
+    if (widget.item != oldWidget.item) {
       bloc.add(InitItemCardEvent(item: widget.item));
     }
   }
@@ -61,15 +64,13 @@ class _MainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (bloc.state.state) {
       case ScreenState.loading:
-        return const AppLoader();
+        return const AppSkeletonWrapper(child: SkeletonItemView());
       case ScreenState.content:
-        return _ItemView(item: bloc.state.item!);
+        return _ItemView(item: bloc.state.item!, bloc: bloc);
       default:
         return FullScreenError(
           message: bloc.state.errorMessage!,
-          onRetryTap: () {
-            /// NOTE : retry event : bloc.add(<event_name>)
-          },
+          onRetryTap: () {},
         );
     }
   }
@@ -77,59 +78,33 @@ class _MainContent extends StatelessWidget {
 
 class _ItemView extends StatelessWidget {
   final ItemModel item;
+  final ItemCardBloc bloc;
 
-  const _ItemView({required this.item});
+  const _ItemView({required this.item, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: Dimens.space2xSmall),
+      height: Dimens.containerSmall,
       decoration: ContainerDecoration(),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-            child: CachedNetworkImage(
-              imageUrl: convertDriveLinkToDirect(item.imageUrl),
-              height: Dimens.containerSmall,
-              width: MediaQuery.of(context).size.width * 0.4,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              filterQuality: FilterQuality.medium,
-              progressIndicatorBuilder:
-                  (context, url, progress) => Center(child: AppLoader()),
-              errorWidget:
-                  (context, url, error) =>
-                      AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
-            ),
-          ),
+          _ImageView(imageUrl: item.imageUrl),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: Dimens.spaceSmall,vertical: Dimens.spaceMedium),
-              height: Dimens.containerSmall,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spaceSmall,
+                vertical: Dimens.spaceMedium,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.name.capitalize(),
-                        style: AppFontTextStyles.textStyleBold().copyWith(
-                          color: AppColors.textColor,
-                          fontSize: Dimens.fontSizeEighteen,
-                        ),
-                      ),
-                      Text(
-                        item.description.capitalize(),
-                        style: AppFontTextStyles.textStyleSmall(),
-                      ),
-                    ],
-                  ),
+                  _NameView(name: item.name, description: item.description),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -141,37 +116,15 @@ class _ItemView extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      AppIconButton(
-                        svgImage: Images.cart,
-                        onTap: () {},
-                        hasBorder: true,
-                        backgroundColor:
-                            item.isFavorite
-                                ? AppColors.lightRed
-                                : AppColors.transparent,
-                        imageColor:
-                            item.isFavorite
-                                ? AppColors.white
-                                : AppColors.primaryOrange,
-                        imageWidth: Dimens.iconSmall,
-                        imageHeight: Dimens.iconSmall,
-                        borderRadius: Dimens.radius4xLarge,
+                      _IconButton(
+                        isCartIcon: true,
+                        onTap: () => bloc.add(AddToCardEvent()),
+                        isSelected: item.isInCart,
                       ),
-                      AppIconButton(
-                        svgImage: Images.favorite,
-                        onTap: () {},
-                        hasBorder: true,
-                        backgroundColor:
-                            item.isInCart
-                                ? AppColors.lightRed
-                                : AppColors.transparent,
-                        imageColor:
-                            item.isInCart
-                                ? AppColors.white
-                                : AppColors.primaryOrange,
-                        imageWidth: Dimens.iconSmall,
-                        imageHeight: Dimens.iconSmall,
-                        borderRadius: Dimens.radius4xLarge,
+                      _IconButton(
+                        isCartIcon: false,
+                        onTap: () => bloc.add(AddToFavoriteEvent()),
+                        isSelected: item.isFavorite,
                       ),
                     ],
                   ),
@@ -185,15 +138,81 @@ class _ItemView extends StatelessWidget {
   }
 }
 
-String convertDriveLinkToDirect(String originalUrl) {
-  // Regex to extract the file ID from Google Drive URL
-  final RegExp regExp = RegExp(r'd/([^/]+)');
-  final match = regExp.firstMatch(originalUrl);
+class _ImageView extends StatelessWidget {
+  final String imageUrl;
 
-  if (match != null && match.groupCount >= 1) {
-    final fileId = match.group(1);
-    return 'https://drive.google.com/uc?export=view&id=$fileId';
-  } else {
-    return originalUrl; // fallback if not matched
+  const _ImageView({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
+      child: CachedNetworkImage(
+        imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
+        height: Dimens.containerSmall,
+        width: MediaQuery.of(context).size.width * 0.4,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        filterQuality: FilterQuality.medium,
+        progressIndicatorBuilder:
+            (context, url, progress) => Center(child: AppLoader()),
+        errorWidget:
+            (context, url, error) =>
+                AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
+      ),
+    );
+  }
+}
+
+class _NameView extends StatelessWidget {
+  final String name;
+  final String description;
+
+  const _NameView({required this.name, required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name.toTitleCase,
+          style: AppFontTextStyles.textStyleBold().copyWith(
+            color: AppColors.textColor,
+            fontSize: Dimens.fontSizeEighteen,
+          ),
+        ),
+        Text(
+          description.capitalize(),
+          style: AppFontTextStyles.textStyleSmall(),
+        ),
+      ],
+    );
+  }
+}
+
+class _IconButton extends StatelessWidget {
+  final bool isSelected;
+  final bool isCartIcon;
+  final Function() onTap;
+
+  const _IconButton({
+    required this.isSelected,
+    required this.isCartIcon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppIconButton(
+      svgImage: isCartIcon ? Images.cart : Images.favorite,
+      onTap: onTap,
+      hasBorder: true,
+      backgroundColor: isSelected ? AppColors.lightRed : AppColors.transparent,
+      imageColor: isSelected ? AppColors.white : AppColors.primaryOrange,
+      imageWidth: Dimens.iconSmall,
+      imageHeight: Dimens.iconSmall,
+      borderRadius: Dimens.radius4xLarge,
+    );
   }
 }

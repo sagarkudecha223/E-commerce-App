@@ -21,7 +21,7 @@ class FoodMenuBloc extends BaseBloc<FoodMenuEvent, FoodMenuData> {
           .build();
 
   _observeNotifiers() {
-    _valueNotifiers.foodMenuStreamer.stream.listen((event) {
+    _valueNotifiers.foodMenuStream.listen((event) {
       _foodMenuOptions = event;
       add(
         UpdateFoodMenuState(

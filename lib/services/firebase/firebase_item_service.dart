@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-import '../../core/enum.dart';
 import '../../model/item_model.dart';
 
 @singleton
@@ -12,121 +11,135 @@ class FirebaseItemService {
 
   final StreamController<List<ItemModel>> _itemsController =
       StreamController<List<ItemModel>>.broadcast();
+  final StreamController<List<ItemModel>> _favoritesController =
+      StreamController<List<ItemModel>>.broadcast();
+  final StreamController<List<ItemModel>> _cartController =
+      StreamController<List<ItemModel>>.broadcast();
 
   List<ItemModel> _allItems = [];
+  List<ItemModel> _cartItems = [];
+  List<ItemModel> _favoriteItems = [];
+
+  StreamSubscription? _itemSub;
+  StreamSubscription? _favSub;
+  StreamSubscription? _cartSub;
 
   String get _uid => _auth.currentUser!.uid;
 
-  /// Initialize stream listener
   Future<void> init() async {
-    _fireStore.collection('items').snapshots().listen((snapshot) async {
+    _itemSub = _fireStore.collection('items').snapshots().listen((snapshot) {
       _allItems =
           snapshot.docs
               .map((doc) => ItemModel.fromMap(doc.id, doc.data()))
               .toList();
-
-      // 🔹 ensure user has collections
-      final favSnap = await _ensureCollectionExists('favorites');
-      final cartSnap = await _ensureCollectionExists('cart');
-
-      final favoriteIds = favSnap.docs.map((doc) => doc.id).toSet();
-      final cartIds = cartSnap.docs.map((doc) => doc.id).toSet();
-
-      // 🔹 merge flags into items
-      final itemsWithFlags =
-          _allItems.map((item) {
-            return item.copyWith(
-              isFavorite: favoriteIds.contains(item.id),
-              isInCart: cartIds.contains(item.id),
-            );
-          }).toList();
-
-      _itemsController.add(itemsWithFlags);
+      _combineData();
     });
-  }
 
-  /// Ensure subcollection exists, return snapshot
-  Future<QuerySnapshot<Map<String, dynamic>>> _ensureCollectionExists(
-    String collectionName,
-  ) async {
-    final colRef = _fireStore
-        .collection('users')
-        .doc(_uid)
-        .collection(collectionName);
-
-    final snap = await colRef.get();
-    if (snap.docs.isEmpty) {
-      // create placeholder doc then delete
-      final temp = await colRef.add({"init": true});
-      await temp.delete();
-      return await colRef.get();
-    }
-    return snap;
-  }
-
-  /// Add to favorites
-  Future<void> addToFavorites(String itemId) async {
-    await _fireStore
+    _favSub = _fireStore
         .collection('users')
         .doc(_uid)
         .collection('favorites')
-        .doc(itemId)
-        .set({"addedAt": DateTime.now().toIso8601String()});
-  }
+        .snapshots()
+        .listen((snapshot) {
+          _favoriteItems =
+              snapshot.docs
+                  .map((doc) => ItemModel.fromMap(doc.id, doc.data()))
+                  .toList();
+          _combineData();
+        });
 
-  /// Remove from favorites
-  Future<void> removeFromFavorites(String itemId) async {
-    await _fireStore
-        .collection('users')
-        .doc(_uid)
-        .collection('favorites')
-        .doc(itemId)
-        .delete();
-  }
-
-  /// Add to cart
-  Future<void> addToCart(String itemId, {int quantity = 1}) async {
-    await _fireStore
+    _cartSub = _fireStore
         .collection('users')
         .doc(_uid)
         .collection('cart')
-        .doc(itemId)
-        .set({
-          "quantity": quantity,
-          "addedAt": DateTime.now().toIso8601String(),
-        }, SetOptions(merge: true));
+        .snapshots()
+        .listen((snapshot) {
+          _cartItems =
+              snapshot.docs
+                  .map((doc) => ItemModel.fromMap(doc.id, doc.data()))
+                  .toList();
+          _combineData();
+        });
   }
 
-  /// Remove from cart
-  Future<void> removeFromCart(String itemId) async {
-    await _fireStore
-        .collection('users')
-        .doc(_uid)
-        .collection('cart')
-        .doc(itemId)
-        .delete();
-  }
-
-  /// Update quantity in cart
-  Future<void> updateCartQuantity(String itemId, int quantity) async {
-    if (quantity <= 0) {
-      await removeFromCart(itemId);
-    } else {
-      await _fireStore
-          .collection('users')
-          .doc(_uid)
-          .collection('cart')
-          .doc(itemId)
-          .set({"quantity": quantity}, SetOptions(merge: true));
-    }
-  }
-
+  /// Streams
   Stream<List<ItemModel>> get itemsStream => _itemsController.stream;
 
-  Stream<List<ItemModel>> itemsByCategory(FoodMenuOptions category) =>
-      itemsStream.map(
-        (list) => list.where((i) => i.categoryId == category.name).toList(),
-      );
+  Stream<List<ItemModel>> get favoritesStream => _favoritesController.stream;
 
-  void dispose() => _itemsController.close();
+  Stream<List<ItemModel>> get cartStream => _cartController.stream;
+
+  /// Getters
+  List<ItemModel> get allItemsList => List.unmodifiable(_allItems);
+
+  List<ItemModel> get cartList => List.unmodifiable(_cartItems);
+
+  List<ItemModel> get favoriteList => List.unmodifiable(_favoriteItems);
+
+  /// Merge data and push
+  void _combineData() {
+    final updated =
+        _allItems.map((item) {
+          final isFavorite = _favoriteItems.any((f) => f.id == item.id);
+          final isInCart = _cartItems.any((c) => c.id == item.id);
+
+          return item.copyWith(isFavorite: isFavorite, isInCart: isInCart);
+        }).toList();
+
+    _allItems = updated;
+    _itemsController.add(updated);
+    _favoritesController.add(updated.where((item) => item.isFavorite).toList());
+    _cartController.add(updated.where((item) => item.isInCart).toList());
+  }
+
+  /// Toggle favorite
+  Future<void> toggleFavorite(ItemModel item) async {
+    final ref = _fireStore
+        .collection('users')
+        .doc(_uid)
+        .collection('favorites')
+        .doc(item.id);
+
+    final exists = _favoriteItems.any((f) => f.id == item.id);
+
+    if (exists) {
+      await ref.delete();
+    } else {
+      await ref.set({
+        ...item.toMap(),
+        "isFavorite": true,
+        "addedAt": FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  /// Toggle cart
+  Future<void> toggleCart(ItemModel item) async {
+    final ref = _fireStore
+        .collection('users')
+        .doc(_uid)
+        .collection('cart')
+        .doc(item.id);
+
+    final exists = _cartItems.any((c) => c.id == item.id);
+
+    if (exists) {
+      await ref.delete();
+    } else {
+      await ref.set({
+        ...item.toMap(),
+        "isInCart": true,
+        "addedAt": FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  void dispose() {
+    _itemsController.close();
+    _favoritesController.close();
+    _cartController.close();
+    _itemSub?.cancel();
+    _favSub?.cancel();
+    _cartSub?.cancel();
+  }
 }

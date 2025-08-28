@@ -14,6 +14,8 @@ import 'package:bloc_base_architecture/base_arch_controller/base_arch_controller
     as _i345;
 import 'package:bloc_base_architecture/imports/core_imports.dart' as _i874;
 import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
+import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
+import 'package:demo_app/bloc/favorite/favorite_bloc.dart' as _i1070;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
 import 'package:demo_app/bloc/home/home_bloc.dart' as _i892;
@@ -59,6 +61,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i678.FirebaseUserDataService(),
     );
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
+    gh.factory<_i288.CartBloc>(
+      () => _i288.CartBloc(gh<_i95.FirebaseItemService>()),
+    );
+    gh.factory<_i1070.FavoriteBloc>(
+      () => _i1070.FavoriteBloc(gh<_i95.FirebaseItemService>()),
+    );
     gh.factory<_i1028.ItemCardBloc>(
       () => _i1028.ItemCardBloc(gh<_i95.FirebaseItemService>()),
     );
@@ -95,13 +103,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i678.FirebaseUserDataService>(),
       ),
     );
-    gh.factory<_i892.HomeBloc>(
-      () => _i892.HomeBloc(gh<_i800.UserService>(), gh<_i192.ValueNotifiers>()),
-    );
     gh.factory<_i197.LoginBloc>(
       () => _i197.LoginBloc(
         gh<_i265.FirebaseAuthService>(),
         gh<_i800.UserService>(),
+      ),
+    );
+    gh.factory<_i892.HomeBloc>(
+      () => _i892.HomeBloc(
+        gh<_i800.UserService>(),
+        gh<_i192.ValueNotifiers>(),
+        gh<_i95.FirebaseItemService>(),
       ),
     );
     gh.factory<_i1060.SignUpBloc>(

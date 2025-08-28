@@ -14,16 +14,21 @@ class ThemeService {
   final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
   void getThemeMode() {
-    final bool isLight =
-        _preferenceStore.getValue(SharedPreferenceStore.IS_DARK_THEME) ?? true;
-    themeNotifier.value = isLight ? ThemeMode.light : ThemeMode.dark;
-    AppColors.isLightTheme = isLight;
+    final bool isDarkTheme =
+        _preferenceStore.getValue(SharedPreferenceStore.IS_DARK_THEME) ?? false;
+    AppColors.isLightTheme = !isDarkTheme;
+    themeNotifier.value = isDarkTheme ? ThemeMode.dark : ThemeMode.light;
   }
 
   void changeTheme() {
-    final isDark = themeNotifier.value == ThemeMode.dark;
-    themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
-    _preferenceStore.setValue(SharedPreferenceStore.IS_DARK_THEME, isDark);
-    AppColors.isLightTheme = !isDark;
+    themeNotifier.value =
+        themeNotifier.value == ThemeMode.dark
+            ? ThemeMode.light
+            : ThemeMode.dark;
+    AppColors.isLightTheme = themeNotifier.value == ThemeMode.light;
+    _preferenceStore.setValue(
+      SharedPreferenceStore.IS_DARK_THEME,
+      themeNotifier.value == ThemeMode.dark,
+    );
   }
 }

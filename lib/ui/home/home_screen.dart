@@ -14,10 +14,12 @@ import '../../core/enum_extensions.dart';
 import '../../core/images.dart';
 import '../../core/styles.dart';
 import '../../localization/app_localization.dart';
+import '../cart/card_screen.dart';
 import '../common/app_loader.dart';
 import '../common/buttons/icon_button.dart';
 import '../common/svg_icon.dart';
 import '../decoration/screen_background.dart';
+import '../favorite/favorite_screen.dart';
 import '../full_screen_error/full_screen_error.dart';
 import '../shop/explore/explore_screen.dart';
 import '../shop/food_menu/food_menu_view.dart';
@@ -187,10 +189,10 @@ class _CenterContent extends StatelessWidget {
       index: index,
       preloadIndexes: [0],
       children: [
-        ShopScreen(),
-        ExploreScreen(),
-        const SizedBox(),
-        const SizedBox(),
+        const ShopScreen(),
+        const ExploreScreen(),
+        const CartScreen(),
+        const FavoriteScreen(),
         const SizedBox(),
       ],
     );

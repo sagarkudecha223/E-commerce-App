@@ -34,6 +34,8 @@ class ItemModel {
     imageUrl: data['imageUrl'] ?? '',
     isVegan: data['isVegan'] ?? true,
     available: data['available'] ?? true,
+    isFavorite: data['isFavorite'] ?? false,
+    isInCart: data['isInCart'] ?? false,
   );
 
   Map<String, dynamic> toMap() => {
@@ -44,6 +46,8 @@ class ItemModel {
     'imageUrl': imageUrl,
     'isVegan': isVegan,
     'available': available,
+    'isInCart': isInCart,
+    'isFavorite': isFavorite,
   };
 
   ItemModel copyWith({bool? isFavorite, bool? isInCart, int? cartQuantity}) {
