@@ -8,6 +8,8 @@ import 'item_card_contract.dart';
 class ItemCardBloc extends BaseBloc<ItemCardEvent, ItemCardData> {
   ItemCardBloc(this._firebaseItemService) : super(initState) {
     on<InitItemCardEvent>(_initItemCardEvent);
+    on<AddToCardEvent>(_addToCardEvent);
+    on<AddToFavoriteEvent>(_addToFavoriteEvent);
     on<UpdateItemCardState>((event, emit) => emit(event.state));
   }
 
@@ -29,4 +31,9 @@ class ItemCardBloc extends BaseBloc<ItemCardEvent, ItemCardData> {
       ),
     ),
   );
+
+  void _addToCardEvent(_, __) => _firebaseItemService.toggleCart(state.item!);
+
+  void _addToFavoriteEvent(_, __) =>
+      _firebaseItemService.toggleFavorite(state.item!);
 }

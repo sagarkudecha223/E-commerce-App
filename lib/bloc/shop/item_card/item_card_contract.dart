@@ -27,6 +27,10 @@ class InitItemCardEvent extends ItemCardEvent {
   InitItemCardEvent({required this.item});
 }
 
+class AddToCardEvent extends ItemCardEvent {}
+
+class AddToFavoriteEvent extends ItemCardEvent {}
+
 class UpdateItemCardState extends ItemCardEvent {
   final ItemCardData state;
 

@@ -65,4 +65,8 @@ abstract class AppLocalization extends BaseLocalization {
   String get desert;
 
   String get drinks;
+
+  String get yourCartIsEmpty;
+
+  String get yourFavoriteIsEmpty;
 }

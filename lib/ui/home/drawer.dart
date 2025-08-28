@@ -57,7 +57,7 @@ class _DrawerContent extends StatelessWidget {
         children: [
           _ProfileView(userData: bloc.state.userData),
           const Gap(Dimens.spaceXLarge),
-          _DrawerOptionView(bloc: bloc),
+          Expanded(child: _DrawerOptionView(bloc: bloc)),
         ],
       ),
     );

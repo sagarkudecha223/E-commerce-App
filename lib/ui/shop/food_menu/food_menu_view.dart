@@ -26,13 +26,13 @@ class FoodMenuView extends StatefulWidget {
 class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView> {
   @override
   Widget build(BuildContext context) {
-    final foodMenu = getIt.get<ValueNotifiers>().foodMenuStreamer;
+    final foodMenu = getIt.get<ValueNotifiers>();
     return BlocProvider<FoodMenuBloc>(
       create: (_) => bloc,
       child: BlocBuilder<FoodMenuBloc, FoodMenuData>(
         builder:
             (_, __) => StreamBuilder(
-              stream: foodMenu.stream,
+              stream: foodMenu.foodMenuStream,
               builder:
                   (context, snapshot) => Container(
                     decoration: ScreenBackground(),
@@ -45,7 +45,7 @@ class _FoodMenuViewState extends BaseState<FoodMenuBloc, FoodMenuView> {
                           FoodMenuOptions.values
                               .map(
                                 (item) => _IconButton(
-                                  onTap: () => foodMenu.add(item),
+                                  onTap: () => foodMenu.updateFoodMenu(item),
                                   isSelected:
                                       widget.viewOnly
                                           ? false

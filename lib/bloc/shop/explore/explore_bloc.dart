@@ -30,14 +30,16 @@ class ExploreBloc extends BaseBloc<ExploreEvent, ExploreData> {
             ..errorMessage = '')
           .build();
 
-  void _initExploreEvent(_, __) async {
-    await _firebaseItemService.init();
+  void _initExploreEvent(_, __) {
     add(
       UpdateExploreState(
         state.rebuild(
           (u) =>
               u
-                ..foodMenu = _foodMenuOptions ?? FoodMenuOptions.snacks,
+                ..foodMenu =
+                    _valueNotifiers.lastFoodMenu ?? FoodMenuOptions.snacks
+                ..allItems = _firebaseItemService.allItemsList
+                ..state = ScreenState.content,
         ),
       ),
     );
@@ -47,7 +49,7 @@ class ExploreBloc extends BaseBloc<ExploreEvent, ExploreData> {
       state.allItems.where((item) => item.categoryId == category.name).toList();
 
   _observeNotifiers() {
-    _valueNotifiers.foodMenuStreamer.stream.listen((event) {
+    _valueNotifiers.foodMenuStream.listen((event) {
       _foodMenuOptions = event;
       add(
         UpdateExploreState(state.rebuild((u) => u.foodMenu = _foodMenuOptions)),
@@ -57,8 +59,16 @@ class ExploreBloc extends BaseBloc<ExploreEvent, ExploreData> {
       (event) {
         List<ItemModel> list = [];
         list = event;
-        add(UpdateExploreState(state.rebuild((u) => u..allItems = list
-          ..state = ScreenState.content)));
+        add(
+          UpdateExploreState(
+            state.rebuild(
+              (u) =>
+                  u
+                    ..allItems = list
+                    ..state = ScreenState.content,
+            ),
+          ),
+        );
       },
       onError:
           (e) => add(
