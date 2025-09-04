@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../bloc/cart/cart_bloc.dart';
 import '../../bloc/cart/cart_contract.dart';
-import '../../core/styles.dart';
-import '../../localization/app_localization.dart';
-import '../../model/item_model.dart';
-import '../common/skeleton/skeleton_list_view.dart';
+import '../common/skeleton/skeleton_cart_fav_list_view.dart';
 import '../full_screen_error/full_screen_error.dart';
-import '../shop/item_card/item_card_view.dart';
+import '../shop/item_card/cart_and_fav/cart_and_fav_list_view.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -30,7 +27,8 @@ class _CartScreenState extends BaseState<CartBloc, CartScreen> {
     return BlocProvider<CartBloc>(
       create: (_) => bloc,
       child: BlocBuilder<CartBloc, CartData>(
-        builder: (_, __) => _MainContent(bloc: bloc),
+        builder:
+            (_, __) => SingleChildScrollView(child: _MainContent(bloc: bloc)),
       ),
     );
   }
@@ -45,9 +43,9 @@ class _MainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (bloc.state.state) {
       case ScreenState.loading:
-        return const SkeletonListView();
+        return const SkeletonCartFavListView();
       case ScreenState.content:
-        return _CartItemsView(itemList: bloc.state.cartItem);
+        return CartAndFavListView(itemList: bloc.state.cartItem);
       default:
         return FullScreenError(
           message: bloc.state.errorMessage!,
@@ -56,27 +54,5 @@ class _MainContent extends StatelessWidget {
           },
         );
     }
-  }
-}
-
-class _CartItemsView extends StatelessWidget {
-  final List<ItemModel> itemList;
-
-  const _CartItemsView({required this.itemList});
-
-  @override
-  Widget build(BuildContext context) {
-    return itemList.isNotEmpty
-        ? ListView.builder(
-          itemCount: itemList.length,
-          itemBuilder: (context, index) => ItemCardView(item: itemList[index]),
-          shrinkWrap: true,
-        )
-        : Center(
-          child: Text(
-            AppLocalization.currentLocalization().yourCartIsEmpty,
-            style: AppFontTextStyles.textStyleBold(),
-          ),
-        );
   }
 }
