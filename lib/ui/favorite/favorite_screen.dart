@@ -26,7 +26,8 @@ class _FavoriteScreenState extends BaseState<FavoriteBloc, FavoriteScreen> {
     return BlocProvider<FavoriteBloc>(
       create: (_) => bloc,
       child: BlocBuilder<FavoriteBloc, FavoriteData>(
-        builder: (_, __) => _MainContent(bloc: bloc),
+        builder:
+            (_, __) => SingleChildScrollView(child: _MainContent(bloc: bloc)),
       ),
     );
   }
@@ -43,7 +44,10 @@ class _MainContent extends StatelessWidget {
       case ScreenState.loading:
         return const SkeletonCartFavListView();
       case ScreenState.content:
-        return CartAndFavListView(itemList: bloc.state.favoriteItems);
+        return CartAndFavListView(
+          itemList: bloc.state.favoriteItems,
+          isFavList: true,
+        );
       default:
         return FullScreenError(
           message: bloc.state.errorMessage!,

@@ -3,6 +3,7 @@ import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../bloc/shop/item_card/item_card_bloc.dart';
 import '../../../../bloc/shop/item_card/item_card_contract.dart';
@@ -22,8 +23,9 @@ import '../../../full_screen_error/full_screen_error.dart';
 
 class CardAndFavItemView extends StatefulWidget {
   final ItemModel item;
+  final bool? itemIsFav;
 
-  const CardAndFavItemView({super.key, required this.item});
+  const CardAndFavItemView({super.key, required this.item, this.itemIsFav});
 
   @override
   State<CardAndFavItemView> createState() => _CardAndFavItemViewState();
@@ -34,14 +36,18 @@ class _CardAndFavItemViewState
   @override
   void initState() {
     super.initState();
-    bloc.add(InitItemCardEvent(item: widget.item));
+    bloc.add(
+      InitItemCardEvent(item: widget.item, itemIsFavOrCart: widget.itemIsFav),
+    );
   }
 
   @override
   void didUpdateWidget(covariant CardAndFavItemView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.item != oldWidget.item) {
-      bloc.add(InitItemCardEvent(item: widget.item));
+      bloc.add(
+        InitItemCardEvent(item: widget.item, itemIsFavOrCart: widget.itemIsFav),
+      );
     }
   }
 
@@ -102,11 +108,13 @@ class _ItemView extends StatelessWidget {
                       isCartIcon: true,
                       onTap: () => bloc.add(AddToCardEvent()),
                       isSelected: item.isInCart,
+                      itemIsFav: bloc.state.itemIsFavOrCart!,
                     ),
                     _IconButton(
                       isCartIcon: false,
                       onTap: () => bloc.add(AddToFavoriteEvent()),
                       isSelected: item.isFavorite,
+                      itemIsFav: bloc.state.itemIsFavOrCart!,
                     ),
                   ],
                 ),
@@ -191,17 +199,30 @@ class _IconButton extends StatelessWidget {
   final bool isSelected;
   final bool isCartIcon;
   final Function() onTap;
+  final bool itemIsFav;
 
   const _IconButton({
     required this.isSelected,
     required this.isCartIcon,
     required this.onTap,
+    required this.itemIsFav,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppIconButton(
-      svgImage: isCartIcon ? Images.cart : Images.favorite,
+      svgImage:
+          itemIsFav
+              ? isCartIcon
+                  ? Images.cart
+                  : isSelected
+                  ? Images.delete
+                  : Images.favorite
+              : !isCartIcon
+              ? Images.favorite
+              : isSelected
+              ? Images.delete
+              : Images.cart,
       onTap: onTap,
       hasBorder: true,
       backgroundColor:
@@ -210,6 +231,10 @@ class _IconButton extends StatelessWidget {
       imageWidth: Dimens.iconSmall,
       imageHeight: Dimens.iconSmall,
       borderRadius: Dimens.radius4xLarge,
+    ).animate(
+      effects: [ShakeEffect(), ScaleEffect(begin: Offset(0.9, 0.9))],
+      value: isSelected ? 1 : 0,
+      onPlay: (controller) => controller.forward(from: 0),
     );
   }
 }

@@ -14,8 +14,8 @@ import 'cart_and_fav_card_view.dart';
 
 class CartAndFavListView extends StatelessWidget {
   final List<ItemModel> itemList;
-
-  const CartAndFavListView({super.key, required this.itemList});
+  final bool isFavList;
+  const CartAndFavListView({super.key, required this.itemList, required this.isFavList});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,30 @@ class CartAndFavListView extends StatelessWidget {
           ),
           itemCount: itemList.length,
           itemBuilder:
-              (context, index) => CardAndFavItemView(item: itemList[index]),
+              (context, index) => AnimatedSwitcher(
+                duration: const Duration(milliseconds: 700),
+                transitionBuilder: (child, animation) {
+                  final curved = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOut,
+                  );
+                  return FadeTransition(
+                    opacity: curved,
+                    child: ScaleTransition(
+                      scale: Tween<double>(
+                        begin: 0.90,
+                        end: 1.0,
+                      ).animate(curved),
+                      child: child,
+                    ),
+                  );
+                },
+                child: CardAndFavItemView(
+                  item: itemList[index],
+                  key: ValueKey(itemList[index].id),
+                  itemIsFav: isFavList,
+                ),
+              ),
           shrinkWrap: true,
         )
         : Center(

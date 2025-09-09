@@ -45,7 +45,7 @@ class _MainContent extends StatelessWidget {
       case ScreenState.loading:
         return const SkeletonCartFavListView();
       case ScreenState.content:
-        return CartAndFavListView(itemList: bloc.state.cartItem);
+        return CartAndFavListView(itemList: bloc.state.cartItem,isFavList: false);
       default:
         return FullScreenError(
           message: bloc.state.errorMessage!,

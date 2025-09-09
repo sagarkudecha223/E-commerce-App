@@ -82,8 +82,15 @@ class FirebaseItemService {
         _allItems.map((item) {
           final isFavorite = _favoriteItems.any((f) => f.id == item.id);
           final isInCart = _cartItems.any((c) => c.id == item.id);
-
-          return item.copyWith(isFavorite: isFavorite, isInCart: isInCart);
+          final cartItem = _cartItems.firstWhere(
+            (c) => c.id == item.id,
+            orElse: () => item.copyWith(cartQuantity: 0),
+          );
+          return item.copyWith(
+            isFavorite: isFavorite,
+            isInCart: isInCart,
+            cartQuantity: cartItem.cartQuantity,
+          );
         }).toList();
 
     _allItems = updated;
@@ -129,6 +136,7 @@ class FirebaseItemService {
       await ref.set({
         ...item.toMap(),
         "isInCart": true,
+        "cartQuantity": item.cartQuantity == 0 ? 1 : item.cartQuantity,
         "addedAt": FieldValue.serverTimestamp(),
       });
     }

@@ -124,4 +124,16 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get yourFavoriteIsEmpty => 'Your Favorite Cart is empty';
+
+  @override
+  String get addToFavorite => 'Add to Favorite';
+
+  @override
+  String get addToCart => 'Add to Cart';
+
+  @override
+  String get removeFromFavorite => 'Remove from Favorite';
+
+  @override
+  String get removeFromCart => 'Remove from Cart';
 }
