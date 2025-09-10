@@ -64,7 +64,10 @@ class _ItemCardViewState extends BaseState<ItemCardBloc, ItemCardView> {
       case AppRoutes.itemDetailScreen:
         navigatorKey.currentContext?.push(
           builder:
-              (context) => ItemDetailScreen(item: screen.data as ItemModel),
+              (context) => ItemDetailScreen(
+                item: screen.data as ItemModel,
+                heroTag: widget.item.imageUrl,
+              ),
           settings: RouteSettings(name: screen.target),
         );
     }

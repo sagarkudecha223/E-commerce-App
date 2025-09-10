@@ -14,7 +14,7 @@ import '../../core/enum_extensions.dart';
 import '../../core/images.dart';
 import '../../core/styles.dart';
 import '../../localization/app_localization.dart';
-import '../cart/card_screen.dart';
+import '../cart/cart_screen.dart';
 import '../common/app_loader.dart';
 import '../common/buttons/icon_button.dart';
 import '../common/svg_icon.dart';

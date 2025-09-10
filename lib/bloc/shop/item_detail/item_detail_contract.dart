@@ -18,6 +18,8 @@ abstract class ItemDetailData
 
   num get totalPrice;
 
+  String get heroTag;
+
   String? get errorMessage;
 }
 
@@ -25,8 +27,9 @@ abstract class ItemDetailEvent {}
 
 class InitItemDetailEvent extends ItemDetailEvent {
   final ItemModel item;
+  final String heroTag;
 
-  InitItemDetailEvent({required this.item});
+  InitItemDetailEvent({required this.item, required this.heroTag});
 }
 
 class AddToCardEvent extends ItemDetailEvent {}

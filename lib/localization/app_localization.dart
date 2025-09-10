@@ -77,4 +77,8 @@ abstract class AppLocalization extends BaseLocalization {
   String get removeFromFavorite;
 
   String get removeFromCart;
+
+  String get checkOut;
+
+  String get total;
 }

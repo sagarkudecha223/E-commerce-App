@@ -1,3 +1,4 @@
+import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/extension/string_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
@@ -8,11 +9,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../bloc/shop/item_card/item_card_bloc.dart';
 import '../../../../bloc/shop/item_card/item_card_contract.dart';
 import '../../../../core/colors.dart';
+import '../../../../core/constants.dart';
 import '../../../../core/dimens.dart';
 import '../../../../core/image_converter.dart';
 import '../../../../core/images.dart';
+import '../../../../core/routes.dart';
 import '../../../../core/styles.dart';
 import '../../../../model/item_model.dart';
+import '../../../common/anim/hero.dart';
+import '../../../common/app_inkwell.dart';
 import '../../../common/app_loader.dart';
 import '../../../common/buttons/icon_button.dart';
 import '../../../common/skeleton/skeleton_cart_and_fav_view.dart';
@@ -20,12 +25,17 @@ import '../../../common/skeleton/skeleton_wrapper.dart';
 import '../../../common/svg_icon.dart';
 import '../../../decoration/container_decoration.dart';
 import '../../../full_screen_error/full_screen_error.dart';
+import '../../item_detail/item_detail_screen.dart';
 
 class CardAndFavItemView extends StatefulWidget {
   final ItemModel item;
-  final bool? itemIsFav;
+  final bool itemIsFav;
 
-  const CardAndFavItemView({super.key, required this.item, this.itemIsFav});
+  const CardAndFavItemView({
+    super.key,
+    required this.item,
+    required this.itemIsFav,
+  });
 
   @override
   State<CardAndFavItemView> createState() => _CardAndFavItemViewState();
@@ -48,6 +58,31 @@ class _CardAndFavItemViewState
       bloc.add(
         InitItemCardEvent(item: widget.item, itemIsFavOrCart: widget.itemIsFav),
       );
+    }
+  }
+
+  @override
+  void onViewEvent(ViewAction event) {
+    switch (event.runtimeType) {
+      case const (NavigateScreen):
+        _buildHandleActionEvent(event as NavigateScreen);
+    }
+  }
+
+  void _buildHandleActionEvent(NavigateScreen screen) {
+    switch (screen.target) {
+      case AppRoutes.itemDetailScreen:
+        navigatorKey.currentContext?.push(
+          builder:
+              (context) => ItemDetailScreen(
+                item: screen.data as ItemModel,
+                heroTag:
+                    widget.itemIsFav
+                        ? widget.item.id
+                        : widget.item.id + widget.item.name,
+              ),
+          settings: RouteSettings(name: screen.target),
+        );
     }
   }
 
@@ -93,40 +128,49 @@ class _ItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ContainerDecoration(),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: Dimens.containerSmall,
-            child: Stack(
-              children: [
-                _ImageView(imageUrl: item.imageUrl),
-                Row(
-                  children: [
-                    _IconButton(
-                      isCartIcon: true,
-                      onTap: () => bloc.add(AddToCardEvent()),
-                      isSelected: item.isInCart,
-                      itemIsFav: bloc.state.itemIsFavOrCart!,
-                    ),
-                    _IconButton(
-                      isCartIcon: false,
-                      onTap: () => bloc.add(AddToFavoriteEvent()),
-                      isSelected: item.isFavorite,
-                      itemIsFav: bloc.state.itemIsFavOrCart!,
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: _PriceView(price: item.price),
-                ),
-              ],
+      child: AppInkWell(
+        onTap: () => bloc.add(CardTapEvent()),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: Dimens.containerSmall,
+              child: Stack(
+                children: [
+                  _ImageView(
+                    imageUrl: item.imageUrl,
+                    id:
+                        bloc.state.itemIsFavOrCart!
+                            ? item.id
+                            : item.id + item.name,
+                  ),
+                  Row(
+                    children: [
+                      _IconButton(
+                        isCartIcon: true,
+                        onTap: () => bloc.add(AddToCardEvent()),
+                        isSelected: item.isInCart,
+                        itemIsFav: bloc.state.itemIsFavOrCart!,
+                      ),
+                      _IconButton(
+                        isCartIcon: false,
+                        onTap: () => bloc.add(AddToFavoriteEvent()),
+                        isSelected: item.isFavorite,
+                        itemIsFav: bloc.state.itemIsFavOrCart!,
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: _PriceView(price: item.price),
+                  ),
+                ],
+              ),
             ),
-          ),
-          _NameView(name: item.name, description: item.description),
-        ],
+            _NameView(name: item.name, description: item.description),
+          ],
+        ),
       ),
     );
   }
@@ -134,25 +178,29 @@ class _ItemView extends StatelessWidget {
 
 class _ImageView extends StatelessWidget {
   final String imageUrl;
+  final String id;
 
-  const _ImageView({required this.imageUrl});
+  const _ImageView({required this.imageUrl, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      child: CachedNetworkImage(
-        imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
-        height: Dimens.containerSmall,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        filterQuality: FilterQuality.medium,
-        progressIndicatorBuilder:
-            (context, url, progress) => Center(child: AppLoader()),
-        errorWidget:
-            (context, url, error) =>
-                AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
+    return HeroAnim(
+      tag: id,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Dimens.radiusLarge),
+        child: CachedNetworkImage(
+          imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
+          height: Dimens.containerSmall,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+          filterQuality: FilterQuality.medium,
+          progressIndicatorBuilder:
+              (context, url, progress) => Center(child: AppLoader()),
+          errorWidget:
+              (context, url, error) =>
+                  AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
+        ),
       ),
     );
   }

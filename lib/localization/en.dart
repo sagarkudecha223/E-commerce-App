@@ -136,4 +136,10 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get removeFromCart => 'Remove from Cart';
+
+  @override
+  String get checkOut => 'Checkout';
+
+  @override
+  String get total => 'Total';
 }

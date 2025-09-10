@@ -20,6 +20,7 @@ class ItemDetailBloc extends BaseBloc<ItemDetailEvent, ItemDetailData> {
   static ItemDetailData get initState =>
       (ItemDetailDataBuilder()
             ..state = ScreenState.loading
+            ..heroTag = ''
             ..totalPrice = 0
             ..errorMessage = '')
           .build();
@@ -31,16 +32,22 @@ class ItemDetailBloc extends BaseBloc<ItemDetailEvent, ItemDetailData> {
             u
               ..state = ScreenState.content
               ..totalPrice = 0
+              ..heroTag = event.heroTag
               ..item = event.item,
       ),
     ),
   );
 
   void _addToCardEvent(_, __) {
+    final quantity =
+        state.item!.cartQuantity == 0 ? 1 : state.item!.cartQuantity;
     _firebaseItemService.toggleCart(
-      state.item!.copyWith(cartQuantity: state.item!.cartQuantity),
+      state.item!.copyWith(cartQuantity: quantity),
     );
-    final updatedItem = state.item!.copyWith(isInCart: !state.item!.isInCart);
+    final updatedItem = state.item!.copyWith(
+      isInCart: !state.item!.isInCart,
+      cartQuantity: quantity,
+    );
     _updateItem(updatedItem: updatedItem);
   }
 

@@ -25,8 +25,9 @@ import '../../full_screen_error/full_screen_error.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final ItemModel item;
+  final String heroTag;
 
-  const ItemDetailScreen({super.key, required this.item});
+  const ItemDetailScreen({super.key, required this.item, this.heroTag = ''});
 
   @override
   State<ItemDetailScreen> createState() => _ItemDetailScreenState();
@@ -37,7 +38,7 @@ class _ItemDetailScreenState
   @override
   void initState() {
     super.initState();
-    bloc.add(InitItemDetailEvent(item: widget.item));
+    bloc.add(InitItemDetailEvent(item: widget.item, heroTag: widget.heroTag));
   }
 
   @override
@@ -87,6 +88,7 @@ class _ItemDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final item = bloc.state.item!;
     return Container(
       height: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -97,7 +99,7 @@ class _ItemDetailContent extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            _ImageView(imageUrl: bloc.state.item!.imageUrl),
+            _ImageView(imageUrl: item.imageUrl, heroTag: bloc.state.heroTag),
             const Gap(Dimens.space2xSmall),
             _PriceView(bloc: bloc),
             const Gap(Dimens.space2xSmall),
@@ -106,7 +108,7 @@ class _ItemDetailContent extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    bloc.state.item!.description.capitalize(),
+                    item.description.capitalize(),
                     style: AppFontTextStyles.textStyleMedium(),
                   ),
                 ),
@@ -117,13 +119,13 @@ class _ItemDetailContent extends StatelessWidget {
             _CommonButton(
               isCart: false,
               onTap: () => bloc.add(AddToFavoriteEvent()),
-              isSelected: bloc.state.item!.isFavorite,
+              isSelected: item.isFavorite,
             ),
             const Gap(Dimens.spaceLarge),
             _CommonButton(
               isCart: true,
               onTap: () => bloc.add(AddToCardEvent()),
-              isSelected: bloc.state.item!.isInCart,
+              isSelected: item.isInCart,
             ),
           ],
         ),
@@ -134,14 +136,15 @@ class _ItemDetailContent extends StatelessWidget {
 
 class _ImageView extends StatelessWidget {
   final String imageUrl;
+  final String heroTag;
 
-  const _ImageView({required this.imageUrl});
+  const _ImageView({required this.imageUrl, required this.heroTag});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: HeroAnim(
-        tag: imageUrl,
+        tag: heroTag,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(Dimens.radiusLarge),
           child: CachedNetworkImage(
