@@ -24,6 +24,7 @@ import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
 import 'package:demo_app/bloc/shop/explore/explore_bloc.dart' as _i421;
 import 'package:demo_app/bloc/shop/food_menu/food_menu_bloc.dart' as _i36;
 import 'package:demo_app/bloc/shop/item_card/item_card_bloc.dart' as _i1028;
+import 'package:demo_app/bloc/shop/item_detail/item_detail_bloc.dart' as _i1024;
 import 'package:demo_app/bloc/sign_up/sign_up_bloc.dart' as _i1060;
 import 'package:demo_app/core/cache/preference_store.dart' as _i931;
 import 'package:demo_app/injector/injection.dart' as _i609;
@@ -69,6 +70,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1028.ItemCardBloc>(
       () => _i1028.ItemCardBloc(gh<_i95.FirebaseItemService>()),
+    );
+    gh.factory<_i1024.ItemDetailBloc>(
+      () => _i1024.ItemDetailBloc(gh<_i95.FirebaseItemService>()),
     );
     gh.factory<_i36.FoodMenuBloc>(
       () => _i36.FoodMenuBloc(gh<_i192.ValueNotifiers>()),

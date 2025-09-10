@@ -23,4 +23,5 @@ class Images {
   static const snacks = '${_directory}snacks.svg';
   static const vegan = '${_directory}vegan.svg';
   static const deliveryBike = '${_directory}delivery_bike.svg';
+  static const delete = '${_directory}delete.svg';
 }

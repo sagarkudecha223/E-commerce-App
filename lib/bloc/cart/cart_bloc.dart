@@ -32,6 +32,9 @@ class CartBloc extends BaseBloc<CartEvent, CartData> {
         (u) =>
             u
               ..cartItem = _firebaseItemService.cartList
+              ..totalPrice = _cartTotalPrice(
+                items: _firebaseItemService.cartList,
+              )
               ..state = ScreenState.content,
       ),
     ),
@@ -48,6 +51,7 @@ class CartBloc extends BaseBloc<CartEvent, CartData> {
                 (u) =>
                     u
                       ..cartItem = list
+                      ..totalPrice = _cartTotalPrice(items: list)
                       ..state = ScreenState.content,
               ),
             ),
@@ -60,6 +64,13 @@ class CartBloc extends BaseBloc<CartEvent, CartData> {
               ),
             ),
       );
+
+  num _cartTotalPrice({required List<ItemModel> items}) {
+    return items.fold<num>(
+      0,
+      (sum, item) => sum + (item.price * item.cartQuantity),
+    );
+  }
 
   @override
   Future<void> close() {

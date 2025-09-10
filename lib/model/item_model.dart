@@ -36,6 +36,7 @@ class ItemModel {
     available: data['available'] ?? true,
     isFavorite: data['isFavorite'] ?? false,
     isInCart: data['isInCart'] ?? false,
+    cartQuantity: data['cartQuantity'] ?? 0,
   );
 
   Map<String, dynamic> toMap() => {
@@ -48,6 +49,7 @@ class ItemModel {
     'available': available,
     'isInCart': isInCart,
     'isFavorite': isFavorite,
+    'cartQuantity': cartQuantity,
   };
 
   ItemModel copyWith({bool? isFavorite, bool? isInCart, int? cartQuantity}) {

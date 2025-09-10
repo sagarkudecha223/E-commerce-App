@@ -1,17 +1,23 @@
+import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/extension/string_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../bloc/shop/item_card/item_card_bloc.dart';
 import '../../../bloc/shop/item_card/item_card_contract.dart';
 import '../../../core/colors.dart';
+import '../../../core/constants.dart';
 import '../../../core/dimens.dart';
 import '../../../core/image_converter.dart';
 import '../../../core/images.dart';
+import '../../../core/routes.dart';
 import '../../../core/styles.dart';
 import '../../../model/item_model.dart';
+import '../../common/anim/hero.dart';
+import '../../common/app_inkwell.dart';
 import '../../common/app_loader.dart';
 import '../../common/buttons/icon_button.dart';
 import '../../common/skeleton/skeleton_item_view.dart';
@@ -19,6 +25,7 @@ import '../../common/skeleton/skeleton_wrapper.dart';
 import '../../decoration/container_decoration.dart';
 import '../../common/svg_icon.dart';
 import '../../full_screen_error/full_screen_error.dart';
+import '../item_detail/item_detail_screen.dart';
 
 class ItemCardView extends StatefulWidget {
   final ItemModel item;
@@ -41,6 +48,28 @@ class _ItemCardViewState extends BaseState<ItemCardBloc, ItemCardView> {
     super.didUpdateWidget(oldWidget);
     if (widget.item != oldWidget.item) {
       bloc.add(InitItemCardEvent(item: widget.item));
+    }
+  }
+
+  @override
+  void onViewEvent(ViewAction event) {
+    switch (event.runtimeType) {
+      case const (NavigateScreen):
+        _buildHandleActionEvent(event as NavigateScreen);
+    }
+  }
+
+  void _buildHandleActionEvent(NavigateScreen screen) {
+    switch (screen.target) {
+      case AppRoutes.itemDetailScreen:
+        navigatorKey.currentContext?.push(
+          builder:
+              (context) => ItemDetailScreen(
+                item: screen.data as ItemModel,
+                heroTag: widget.item.imageUrl,
+              ),
+          settings: RouteSettings(name: screen.target),
+        );
     }
   }
 
@@ -88,51 +117,54 @@ class _ItemView extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: Dimens.space2xSmall),
       height: Dimens.containerSmall,
       decoration: ContainerDecoration(),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _ImageView(imageUrl: item.imageUrl),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.spaceSmall,
-                vertical: Dimens.spaceMedium,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _NameView(name: item.name, description: item.description),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        '₹ ${item.price.toString()}',
-                        style: AppFontTextStyles.textStyleBold().copyWith(
-                          color: AppColors.primaryOrange,
-                          fontSize: Dimens.fontSizeEighteen,
+      child: AppInkWell(
+        onTap: () => bloc.add(CardTapEvent()),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _ImageView(imageUrl: item.imageUrl),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spaceSmall,
+                  vertical: Dimens.spaceMedium,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _NameView(name: item.name, description: item.description),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          '₹ ${item.price.toString()}',
+                          style: AppFontTextStyles.textStyleBold().copyWith(
+                            color: AppColors.primaryOrange,
+                            fontSize: Dimens.fontSizeEighteen,
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      _IconButton(
-                        isCartIcon: true,
-                        onTap: () => bloc.add(AddToCardEvent()),
-                        isSelected: item.isInCart,
-                      ),
-                      _IconButton(
-                        isCartIcon: false,
-                        onTap: () => bloc.add(AddToFavoriteEvent()),
-                        isSelected: item.isFavorite,
-                      ),
-                    ],
-                  ),
-                ],
+                        const Spacer(),
+                        _IconButton(
+                          isCartIcon: true,
+                          onTap: () => bloc.add(AddToCardEvent()),
+                          isSelected: item.isInCart,
+                        ),
+                        _IconButton(
+                          isCartIcon: false,
+                          onTap: () => bloc.add(AddToFavoriteEvent()),
+                          isSelected: item.isFavorite,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -145,20 +177,23 @@ class _ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      child: CachedNetworkImage(
-        imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
-        height: Dimens.containerSmall,
-        width: MediaQuery.of(context).size.width * 0.4,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        filterQuality: FilterQuality.medium,
-        progressIndicatorBuilder:
-            (context, url, progress) => Center(child: AppLoader()),
-        errorWidget:
-            (context, url, error) =>
-                AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
+    return HeroAnim(
+      tag: imageUrl,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Dimens.radiusLarge),
+        child: CachedNetworkImage(
+          imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
+          height: Dimens.containerSmall,
+          width: MediaQuery.of(context).size.width * 0.4,
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+          filterQuality: FilterQuality.medium,
+          progressIndicatorBuilder:
+              (context, url, progress) => Center(child: AppLoader()),
+          errorWidget:
+              (context, url, error) =>
+                  AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
+        ),
       ),
     );
   }
@@ -208,11 +243,16 @@ class _IconButton extends StatelessWidget {
       svgImage: isCartIcon ? Images.cart : Images.favorite,
       onTap: onTap,
       hasBorder: true,
-      backgroundColor: isSelected ? AppColors.lightRed : AppColors.transparent,
+      backgroundColor:
+          isSelected ? AppColors.primaryOrange : AppColors.transparent,
       imageColor: isSelected ? AppColors.white : AppColors.primaryOrange,
       imageWidth: Dimens.iconSmall,
       imageHeight: Dimens.iconSmall,
       borderRadius: Dimens.radius4xLarge,
+    ).animate(
+      effects: [ShakeEffect(), ScaleEffect(begin: Offset(0.9, 0.9))],
+      value: isSelected ? 1 : 0,
+      onPlay: (controller) => controller.forward(from: 0),
     );
   }
 }

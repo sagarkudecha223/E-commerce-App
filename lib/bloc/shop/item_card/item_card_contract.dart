@@ -16,6 +16,8 @@ abstract class ItemCardData
 
   ItemModel? get item;
 
+  bool? get itemIsFavOrCart;
+
   String? get errorMessage;
 }
 
@@ -23,13 +25,22 @@ abstract class ItemCardEvent {}
 
 class InitItemCardEvent extends ItemCardEvent {
   final ItemModel item;
+  final bool? itemIsFavOrCart;
 
-  InitItemCardEvent({required this.item});
+  InitItemCardEvent({required this.item, this.itemIsFavOrCart});
 }
+
+class CardTapEvent extends ItemCardEvent {}
 
 class AddToCardEvent extends ItemCardEvent {}
 
 class AddToFavoriteEvent extends ItemCardEvent {}
+
+class ChangeQuantityEvent extends ItemCardEvent {
+  final bool isAdding;
+
+  ChangeQuantityEvent({required this.isAdding});
+}
 
 class UpdateItemCardState extends ItemCardEvent {
   final ItemCardData state;

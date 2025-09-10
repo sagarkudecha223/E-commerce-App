@@ -120,8 +120,26 @@ class EnglishLocalization extends AppLocalization {
   String get drinks => 'Drinks';
 
   @override
-  String get yourCartIsEmpty => 'Your cart is empty';
+  String get wantToAddSomething => 'Want to add something ?';
 
   @override
   String get yourFavoriteIsEmpty => 'Your Favorite Cart is empty';
+
+  @override
+  String get addToFavorite => 'Add to Favorite';
+
+  @override
+  String get addToCart => 'Add to Cart';
+
+  @override
+  String get removeFromFavorite => 'Remove from Favorite';
+
+  @override
+  String get removeFromCart => 'Remove from Cart';
+
+  @override
+  String get checkOut => 'Checkout';
+
+  @override
+  String get total => 'Total';
 }
