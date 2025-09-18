@@ -1,7 +1,7 @@
+import 'package:bloc_base_architecture/extension/context_extensions.dart';
+import 'package:bloc_base_architecture/extension/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bloc_base_architecture/extension/string_extensions.dart';
-import 'package:bloc_base_architecture/extension/context_extensions.dart';
 
 import '../../core/colors.dart';
 import '../../core/dimens.dart';
@@ -284,7 +284,7 @@ class _LabelText extends StatelessWidget {
                 ? AppColors.red
                 : isFocused
                 ? AppColors.focusedBorderColor
-                : AppColors.secondaryGrey2,
+                : AppColors.borderColor,
       ),
     );
   }

@@ -81,4 +81,42 @@ abstract class AppLocalization extends BaseLocalization {
   String get checkOut;
 
   String get total;
+
+  String amount(String amount);
+
+  String get confirmOrder;
+
+  String get shippingAddress;
+
+  String get addressLabel;
+
+  String get addressLabelHint;
+
+  String get street;
+
+  String get cityStateCountry;
+
+  String get postalCode;
+
+  String get addAddress;
+
+  String get enterStreetAddress;
+
+  String get enterAddressLabel;
+
+  String get enterCityStateCountry;
+
+  String get enterPostalCode;
+
+  String get enterValidPostalCode;
+
+  String get pleasePinLocationInMap;
+
+  String get subTotal;
+
+  String get taxFees;
+
+  String get delivery;
+
+  String get placeOrder;
 }

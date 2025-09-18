@@ -15,12 +15,15 @@ import 'package:bloc_base_architecture/base_arch_controller/base_arch_controller
 import 'package:bloc_base_architecture/imports/core_imports.dart' as _i874;
 import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
 import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
+import 'package:demo_app/bloc/drawer/address/address_bloc.dart' as _i785;
 import 'package:demo_app/bloc/favorite/favorite_bloc.dart' as _i1070;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
 import 'package:demo_app/bloc/home/home_bloc.dart' as _i892;
 import 'package:demo_app/bloc/login/login_bloc.dart' as _i197;
 import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
+import 'package:demo_app/bloc/order/confirm_order/confirm_order_bloc.dart'
+    as _i52;
 import 'package:demo_app/bloc/shop/explore/explore_bloc.dart' as _i421;
 import 'package:demo_app/bloc/shop/food_menu/food_menu_bloc.dart' as _i36;
 import 'package:demo_app/bloc/shop/item_card/item_card_bloc.dart' as _i1028;
@@ -28,6 +31,7 @@ import 'package:demo_app/bloc/shop/item_detail/item_detail_bloc.dart' as _i1024;
 import 'package:demo_app/bloc/sign_up/sign_up_bloc.dart' as _i1060;
 import 'package:demo_app/core/cache/preference_store.dart' as _i931;
 import 'package:demo_app/injector/injection.dart' as _i609;
+import 'package:demo_app/services/firebase/address_service.dart' as _i685;
 import 'package:demo_app/services/firebase/auth_service.dart' as _i265;
 import 'package:demo_app/services/firebase/firebase_item_service.dart' as _i95;
 import 'package:demo_app/services/firebase/firebase_user_data_service.dart'
@@ -61,6 +65,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i678.FirebaseUserDataService>(
       () => _i678.FirebaseUserDataService(),
     );
+    gh.singleton<_i685.AddressService>(() => _i685.AddressService());
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
     gh.factory<_i288.CartBloc>(
       () => _i288.CartBloc(gh<_i95.FirebaseItemService>()),
@@ -68,11 +73,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1070.FavoriteBloc>(
       () => _i1070.FavoriteBloc(gh<_i95.FirebaseItemService>()),
     );
-    gh.factory<_i1028.ItemCardBloc>(
-      () => _i1028.ItemCardBloc(gh<_i95.FirebaseItemService>()),
-    );
     gh.factory<_i1024.ItemDetailBloc>(
       () => _i1024.ItemDetailBloc(gh<_i95.FirebaseItemService>()),
+    );
+    gh.factory<_i1028.ItemCardBloc>(
+      () => _i1028.ItemCardBloc(gh<_i95.FirebaseItemService>()),
     );
     gh.factory<_i36.FoodMenuBloc>(
       () => _i36.FoodMenuBloc(gh<_i192.ValueNotifiers>()),
@@ -83,6 +88,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i297.FullScreenErrorBloc>(
       () => _i297.FullScreenErrorBloc(gh<_i921.NetworkInfoImpl>()),
     );
+    gh.factory<_i52.ConfirmOrderBloc>(
+      () => _i52.ConfirmOrderBloc(
+        gh<_i95.FirebaseItemService>(),
+        gh<_i685.AddressService>(),
+      ),
+    );
     gh.singleton<_i931.PreferenceStore>(
       () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
     );
@@ -91,6 +102,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i95.FirebaseItemService>(),
         gh<_i192.ValueNotifiers>(),
       ),
+    );
+    gh.factory<_i785.AddressBloc>(
+      () => _i785.AddressBloc(gh<_i685.AddressService>()),
     );
     gh.singleton<_i1058.ThemeService>(
       () => _i1058.ThemeService(gh<_i931.PreferenceStore>()),

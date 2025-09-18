@@ -5,7 +5,6 @@ class UserModel {
   final String name;
   final String email;
   final String profilePhotoUrl;
-  final List<Address> addressList;
   final List<String> favoriteItems;
 
   UserModel({
@@ -13,7 +12,6 @@ class UserModel {
     required this.name,
     required this.email,
     this.profilePhotoUrl = '',
-    this.addressList = const [],
     this.favoriteItems = const [],
   });
 
@@ -23,7 +21,6 @@ class UserModel {
       'name': name,
       'email': email,
       'profilePhotoUrl': profilePhotoUrl,
-      'addressList': addressList.map((a) => a.toJson()).toList(),
       'favoriteItems': favoriteItems,
     };
   }
@@ -34,10 +31,6 @@ class UserModel {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       profilePhotoUrl: json['profilePhotoUrl'] ?? '',
-      addressList:
-          (json['addressList'] as List<dynamic>? ?? [])
-              .map((a) => Address.fromJson(a))
-              .toList(),
       favoriteItems: List<String>.from(json['favoriteItems'] ?? []),
     );
   }
@@ -55,7 +48,6 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       profilePhotoUrl: profilePhotoUrl ?? this.profilePhotoUrl,
-      addressList: addressList ?? this.addressList,
       favoriteItems: favoriteItems ?? this.favoriteItems,
     );
   }

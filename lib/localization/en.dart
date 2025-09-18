@@ -142,4 +142,61 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get total => 'Total';
+
+  @override
+  String amount(String amount) => '₹ $amount';
+
+  @override
+  String get confirmOrder => 'Confirm Order';
+
+  @override
+  String get shippingAddress => 'Shipping Address';
+
+  @override
+  String get addressLabel => 'Address Label';
+
+  @override
+  String get addressLabelHint => 'Ex. Home Address, Office Address';
+
+  @override
+  String get street => 'Street';
+
+  @override
+  String get cityStateCountry => 'City, State, Country';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get addAddress => 'Add Address';
+
+  @override
+  String get enterStreetAddress => 'Enter street address';
+
+  @override
+  String get enterAddressLabel => 'Enter address label';
+
+  @override
+  String get enterCityStateCountry => 'Enter valid city, state, country';
+
+  @override
+  String get enterPostalCode => 'Enter postal code';
+
+  @override
+  String get enterValidPostalCode => 'Enter valid postal code';
+
+  @override
+  String get pleasePinLocationInMap => 'Please pin location in map';
+
+  @override
+  String get subTotal => 'Subtotal';
+
+  @override
+  String get taxFees => 'Tax & Fees';
+
+  @override
+  String get delivery => 'Delivery';
+
+  @override
+  String get placeOrder => 'Place Order';
 }

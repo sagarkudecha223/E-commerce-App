@@ -1,6 +1,7 @@
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:injectable/injectable.dart';
 import '../../core/enum.dart';
+import '../../core/routes.dart';
 import '../../services/firebase/firebase_item_service.dart';
 import '../../services/notifiers/notifiers.dart';
 import '../../services/user/user_service.dart';
@@ -11,6 +12,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
   HomeBloc(this._userService, this._valueNotifiers, this._firebaseItemService)
     : super(initState) {
     on<InitHomeEvent>(_initHomeEvent);
+    on<CartTapEvent>(_cartTapEvent);
     on<BottomItemTapEvent>(_bottomItemTapEvent);
     on<DrawerOptionTapEvent>(_drawerOptionTapEvent);
     on<UpdateHomeState>((event, emit) => emit(event.state));
@@ -45,6 +47,9 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
 
   void _bottomItemTapEvent(BottomItemTapEvent event, _) =>
       add(UpdateHomeState(state.rebuild((u) => u.currentIndex = event.index)));
+
+  void _cartTapEvent(_, __) =>
+      dispatchViewEvent(NavigateScreen(AppRoutes.confirmOrderScreen));
 
   void _drawerOptionTapEvent(DrawerOptionTapEvent event, _) {
     switch (event.drawerOption) {

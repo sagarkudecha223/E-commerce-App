@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../core/routes.dart';
 import '../../model/item_model.dart';
 import '../../services/firebase/firebase_item_service.dart';
 import 'cart_contract.dart';
@@ -11,6 +12,7 @@ import 'cart_contract.dart';
 class CartBloc extends BaseBloc<CartEvent, CartData> {
   CartBloc(this._firebaseItemService) : super(initState) {
     on<InitCartEvent>(_initCartEvent);
+    on<CheckTapEvent>(_checkTapEvent);
     on<UpdateCartState>((event, emit) => emit(event.state));
     _observeNotifiers();
   }
@@ -65,12 +67,11 @@ class CartBloc extends BaseBloc<CartEvent, CartData> {
             ),
       );
 
-  num _cartTotalPrice({required List<ItemModel> items}) {
-    return items.fold<num>(
-      0,
-      (sum, item) => sum + (item.price * item.cartQuantity),
-    );
-  }
+  num _cartTotalPrice({required List<ItemModel> items}) =>
+      items.fold<num>(0, (sum, item) => sum + (item.price * item.cartQuantity));
+
+  void _checkTapEvent(_, __) =>
+      dispatchViewEvent(NavigateScreen(AppRoutes.confirmOrderScreen));
 
   @override
   Future<void> close() {

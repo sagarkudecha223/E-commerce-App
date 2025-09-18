@@ -1,39 +1,52 @@
 class Address {
+  final String id;
   final String label;
   final String street;
-  final String city;
-  final String state;
+  final String cityStateCountry;
   final String postalCode;
-  final String country;
+  final String latLong;
 
   Address({
+    required this.id,
     required this.label,
     required this.street,
-    required this.city,
-    required this.state,
+    required this.cityStateCountry,
     required this.postalCode,
-    required this.country,
+    required this.latLong,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'label': label,
-      'street': street,
-      'city': city,
-      'state': state,
-      'postalCode': postalCode,
-      'country': country,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'label': label,
+    'street': street,
+    'postalCode': postalCode,
+    'latLong': latLong,
+    'cityStateCountry': cityStateCountry,
+  };
 
-  factory Address.fromJson(Map<String, dynamic> json) {
+  factory Address.fromJson(String id, Map<String, dynamic> json) => Address(
+    id: id,
+    label: json['label'] ?? '',
+    cityStateCountry: json['cityStateCountry'] ?? '',
+    street: json['street'] ?? '',
+    postalCode: json['postalCode'] ?? '',
+    latLong: json['latLong'] ?? '',
+  );
+
+  Address copyWith({
+    String? id,
+    String? label,
+    String? street,
+    String? cityStateCountry,
+    String? postalCode,
+    String? latLong,
+  }) {
     return Address(
-      label: json['label'] ?? '',
-      street: json['street'] ?? '',
-      city: json['city'] ?? '',
-      state: json['state'] ?? '',
-      postalCode: json['postalCode'] ?? '',
-      country: json['country'] ?? '',
+      id: id ?? this.id,
+      label: label ?? this.label,
+      street: street ?? this.street,
+      cityStateCountry: cityStateCountry ?? this.cityStateCountry,
+      postalCode: postalCode ?? this.postalCode,
+      latLong: latLong ?? this.latLong,
     );
   }
 }
