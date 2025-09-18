@@ -15,6 +15,7 @@ import '../../../../core/image_converter.dart';
 import '../../../../core/images.dart';
 import '../../../../core/routes.dart';
 import '../../../../core/styles.dart';
+import '../../../../localization/app_localization.dart';
 import '../../../../model/item_model.dart';
 import '../../../common/anim/hero.dart';
 import '../../../common/app_inkwell.dart';
@@ -305,7 +306,7 @@ class _PriceView extends StatelessWidget {
         ),
       ),
       child: Text(
-        '₹ ${price.toString()}',
+        AppLocalization.currentLocalization().amount(price.toString()),
         style: AppFontTextStyles.textStyleBold().copyWith(
           color: AppColors.white,
           fontSize: Dimens.fontSizeSixteen,

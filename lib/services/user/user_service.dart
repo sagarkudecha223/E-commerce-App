@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:injectable/injectable.dart';
+
 import '../../core/cache/preference_store.dart';
 import '../../core/enum.dart';
-import '../../model/address_model.dart';
 import '../../model/user_model.dart';
 
 @singleton
@@ -39,18 +40,6 @@ class UserService {
       final updatedUser = user.copyWith(
         favoriteItems: [...user.favoriteItems, productId],
       );
-      await saveUser(updatedUser);
-    }
-  }
-
-  void addingNewAddress({required Address address}) async {
-    UserModel? user = await getUser();
-
-    if (user != null) {
-      final updatedUser = user.copyWith(
-        addressList: [...user.addressList, address],
-      );
-
       await saveUser(updatedUser);
     }
   }

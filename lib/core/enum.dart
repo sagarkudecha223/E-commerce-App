@@ -16,3 +16,5 @@ enum DrawerOptions {
 }
 
 enum FoodMenuOptions { snacks, meal, vegan, desert, drinks }
+
+enum AddressInfoController { label, street, cityStateCountry, postalCode }

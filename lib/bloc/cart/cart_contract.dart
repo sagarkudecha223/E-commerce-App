@@ -23,6 +23,8 @@ abstract class CartEvent {}
 
 class InitCartEvent extends CartEvent {}
 
+class CheckTapEvent extends CartEvent {}
+
 class UpdateCartState extends CartEvent {
   final CartData state;
 

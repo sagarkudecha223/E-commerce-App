@@ -15,6 +15,7 @@ import '../../../core/image_converter.dart';
 import '../../../core/images.dart';
 import '../../../core/routes.dart';
 import '../../../core/styles.dart';
+import '../../../localization/app_localization.dart';
 import '../../../model/item_model.dart';
 import '../../common/anim/hero.dart';
 import '../../common/app_inkwell.dart';
@@ -22,8 +23,8 @@ import '../../common/app_loader.dart';
 import '../../common/buttons/icon_button.dart';
 import '../../common/skeleton/skeleton_item_view.dart';
 import '../../common/skeleton/skeleton_wrapper.dart';
-import '../../decoration/container_decoration.dart';
 import '../../common/svg_icon.dart';
+import '../../decoration/container_decoration.dart';
 import '../../full_screen_error/full_screen_error.dart';
 import '../item_detail/item_detail_screen.dart';
 
@@ -140,7 +141,9 @@ class _ItemView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
-                          '₹ ${item.price.toString()}',
+                          AppLocalization.currentLocalization().amount(
+                            item.price.toString(),
+                          ),
                           style: AppFontTextStyles.textStyleBold().copyWith(
                             color: AppColors.primaryOrange,
                             fontSize: Dimens.fontSizeEighteen,

@@ -176,7 +176,7 @@ class _PriceView extends StatelessWidget {
     return Row(
       children: [
         Text(
-          '₹ ${item.price.toString()}',
+          AppLocalization.currentLocalization().amount(item.price.toString()),
           style: AppFontTextStyles.textStyleBold().copyWith(
             color: AppColors.primaryOrange,
             fontSize: Dimens.fontSizeEighteen,

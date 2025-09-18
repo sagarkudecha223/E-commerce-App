@@ -1,3 +1,4 @@
+import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,12 @@ import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import '../../bloc/home/home_bloc.dart';
 import '../../bloc/home/home_contract.dart';
 import '../../core/colors.dart';
+import '../../core/constants.dart';
 import '../../core/dimens.dart';
 import '../../core/enum.dart';
 import '../../core/enum_extensions.dart';
 import '../../core/images.dart';
+import '../../core/routes.dart';
 import '../../core/styles.dart';
 import '../../localization/app_localization.dart';
 import '../cart/cart_screen.dart';
@@ -21,6 +24,7 @@ import '../common/svg_icon.dart';
 import '../decoration/screen_background.dart';
 import '../favorite/favorite_screen.dart';
 import '../full_screen_error/full_screen_error.dart';
+import '../order/confirm_order/confirm_order_screen.dart';
 import '../shop/explore/explore_screen.dart';
 import '../shop/food_menu/food_menu_view.dart';
 import '../shop/shop_screen.dart';
@@ -38,6 +42,24 @@ class _HomeScreenState extends BaseState<HomeBloc, HomeScreen> {
   void initState() {
     super.initState();
     bloc.add(InitHomeEvent());
+  }
+
+  @override
+  void onViewEvent(ViewAction event) {
+    switch (event.runtimeType) {
+      case const (NavigateScreen):
+        _buildHandleActionEvent(event as NavigateScreen);
+    }
+  }
+
+  void _buildHandleActionEvent(NavigateScreen screen) {
+    switch (screen.target) {
+      case AppRoutes.confirmOrderScreen:
+        navigatorKey.currentContext?.push(
+          builder: (context) => ConfirmOrderScreen(),
+          settings: RouteSettings(name: screen.target),
+        );
+    }
   }
 
   @override
@@ -159,7 +181,7 @@ class _AppBar extends StatelessWidget {
           ),
           AppIconButton(
             svgImage: Images.cart,
-            onTap: () {},
+            onTap: () => bloc.add(CartTapEvent()),
             backgroundColor: AppColors.white,
           ),
           AppIconButton(

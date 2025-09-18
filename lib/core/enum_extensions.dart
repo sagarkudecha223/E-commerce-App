@@ -139,3 +139,27 @@ extension FoodMenuOptionsExtension on FoodMenuOptions {
     }
   }
 }
+
+extension AddressInfoControllerExtension on AddressInfoController {
+  String get title {
+    switch (this) {
+      case AddressInfoController.label:
+        return AppLocalization.currentLocalization().addressLabel;
+      case AddressInfoController.street:
+        return AppLocalization.currentLocalization().street;
+      case AddressInfoController.cityStateCountry:
+        return AppLocalization.currentLocalization().cityStateCountry;
+      case AddressInfoController.postalCode:
+        return AppLocalization.currentLocalization().postalCode;
+    }
+  }
+
+  String get hint {
+    switch (this) {
+      case AddressInfoController.label:
+        return AppLocalization.currentLocalization().addressLabelHint;
+      default:
+        return '';
+    }
+  }
+}
