@@ -11,6 +11,7 @@ import '../../../core/constants.dart';
 import '../../../core/dimens.dart';
 import '../../../core/routes.dart';
 import '../../../core/styles.dart';
+import '../../../core/toast.dart';
 import '../../../localization/app_localization.dart';
 import '../../../model/address_model.dart';
 import '../../cart/cart_screen.dart';
@@ -18,6 +19,7 @@ import '../../common/app_bar.dart';
 import '../../common/app_drop_down.dart';
 import '../../common/app_inkwell.dart';
 import '../../common/app_loader.dart';
+import '../../common/app_toast.dart';
 import '../../common/buttons/elevated_button.dart';
 import '../../common/buttons/icon_button.dart';
 import '../../decoration/screen_background.dart';
@@ -42,8 +44,21 @@ class _ConfirmOrderScreenState
   @override
   void onViewEvent(ViewAction event) {
     switch (event.runtimeType) {
+      case const (DisplayMessage):
+        _buildHandleMessage(event as DisplayMessage);
       case const (NavigateScreen):
         _buildHandleActionEvent(event as NavigateScreen);
+    }
+  }
+
+  void _buildHandleMessage(DisplayMessage displayMessage) {
+    final message = displayMessage.message;
+    final type = displayMessage.type;
+    switch (type) {
+      case DisplayMessageType.toast:
+        showToast(AppToast(message: message!), context);
+      default:
+        break;
     }
   }
 
@@ -52,11 +67,6 @@ class _ConfirmOrderScreenState
       case AppRoutes.addressScreen:
         navigatorKey.currentContext?.push(
           builder: (context) => AddressScreen(),
-          settings: RouteSettings(name: screen.target),
-        );
-      case AppRoutes.paymentScreen:
-        navigatorKey.currentContext?.push(
-          builder: (context) => AddressScreen(), //TODO Payment Screen
           settings: RouteSettings(name: screen.target),
         );
     }
@@ -129,7 +139,7 @@ class _OrderContent extends StatelessWidget {
               ),
             ),
           ),
-          _PaymentView(bloc: bloc),
+          if (bloc.state.itemList.isNotEmpty) _PaymentView(bloc: bloc),
         ],
       ),
     );
@@ -217,7 +227,7 @@ class _PaymentView extends StatelessWidget {
                   const Gap(Dimens.space5xSmall),
                   _AmountView(
                     title: AppLocalization.currentLocalization().total,
-                    amount: bloc.state.totalPrice + 20 + 15,
+                    amount: bloc.state.totalPrice,
                   ),
                 ],
               ),
@@ -225,7 +235,8 @@ class _PaymentView extends StatelessWidget {
             const Gap(Dimens.space3xSmall),
             Expanded(
               child: AppElevatedButton(
-                onTap: () {},
+                onTap: () => bloc.add(PlaceOrderTapEvent()),
+                isLoading: bloc.state.isPaymentLoading,
                 title: AppLocalization.currentLocalization().placeOrder,
               ),
             ),

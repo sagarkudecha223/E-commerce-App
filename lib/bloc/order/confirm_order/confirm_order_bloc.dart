@@ -7,12 +7,16 @@ import '../../../core/routes.dart';
 import '../../../model/item_model.dart';
 import '../../../services/firebase/address_service.dart';
 import '../../../services/firebase/firebase_item_service.dart';
+import '../../../services/payment/payment_service.dart';
 import 'confirm_order_contract.dart';
 
 @injectable
 class ConfirmOrderBloc extends BaseBloc<ConfirmOrderEvent, ConfirmOrderData> {
-  ConfirmOrderBloc(this._firebaseItemService, this._addressService)
-    : super(initState) {
+  ConfirmOrderBloc(
+    this._firebaseItemService,
+    this._addressService,
+    this._paymentService,
+  ) : super(initState) {
     on<InitConfirmOrderEvent>(_initConfirmOrderEvent);
     on<AddAddressEvent>(_addAddressEvent);
     on<AddAddressChangeEvent>(_addAddressChangeEvent);
@@ -23,6 +27,7 @@ class ConfirmOrderBloc extends BaseBloc<ConfirmOrderEvent, ConfirmOrderData> {
 
   final FirebaseItemService _firebaseItemService;
   final AddressService _addressService;
+  final PaymentService _paymentService;
   StreamSubscription? _itemStreamSub;
   StreamSubscription? _addressStreamSub;
 
@@ -33,6 +38,7 @@ class ConfirmOrderBloc extends BaseBloc<ConfirmOrderEvent, ConfirmOrderData> {
             ..itemList = []
             ..selectedAddress = null
             ..addressList = []
+            ..isPaymentLoading = false
             ..errorMessage = '')
           .build();
 
@@ -58,8 +64,25 @@ class ConfirmOrderBloc extends BaseBloc<ConfirmOrderEvent, ConfirmOrderData> {
   void _addAddressEvent(_, __) =>
       dispatchViewEvent(NavigateScreen(AppRoutes.addressScreen));
 
-  void _placeOrderTapEvent(PlaceOrderTapEvent event, __) =>
-      dispatchViewEvent(NavigateScreen(AppRoutes.paymentScreen));
+  void _placeOrderTapEvent(PlaceOrderTapEvent event, __) async {
+    add(
+      UpdateConfirmOrderState(state.rebuild((u) => u..isPaymentLoading = true)),
+    );
+
+    final data = await _paymentService.makePayment(
+      amount: state.totalPrice.toInt(),
+    );
+    if (data is bool) {
+      _displayMessage(message: 'Payment Success');
+    } else {
+      _displayMessage(message: 'Payment Failed');
+    }
+    add(
+      UpdateConfirmOrderState(
+        state.rebuild((u) => u..isPaymentLoading = false),
+      ),
+    );
+  }
 
   void _addAddressChangeEvent(AddAddressChangeEvent event, __) => add(
     UpdateConfirmOrderState(
@@ -100,7 +123,17 @@ class ConfirmOrderBloc extends BaseBloc<ConfirmOrderEvent, ConfirmOrderData> {
   }
 
   num _cartTotalPrice({required List<ItemModel> items}) =>
-      items.fold<num>(0, (sum, item) => sum + (item.price * item.cartQuantity));
+      items.fold<num>(
+        0,
+        (sum, item) => sum + (item.price * item.cartQuantity),
+      ) +
+      35;
+
+  _displayMessage({required String message}) {
+    dispatchViewEvent(
+      DisplayMessage(type: DisplayMessageType.toast, message: message),
+    );
+  }
 
   @override
   Future<void> close() {

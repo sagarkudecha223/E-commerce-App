@@ -10,8 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:bloc_base_architecture/api/network/network_info.dart' as _i921;
+import 'package:bloc_base_architecture/api/network/rest_api_client.dart'
+    as _i527;
 import 'package:bloc_base_architecture/base_arch_controller/base_arch_controller.dart'
     as _i345;
+import 'package:bloc_base_architecture/imports/api_imports.dart' as _i194;
 import 'package:bloc_base_architecture/imports/core_imports.dart' as _i874;
 import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
 import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
@@ -38,6 +41,7 @@ import 'package:demo_app/services/firebase/firebase_user_data_service.dart'
     as _i678;
 import 'package:demo_app/services/map/map_service.dart' as _i205;
 import 'package:demo_app/services/notifiers/notifiers.dart' as _i192;
+import 'package:demo_app/services/payment/payment_service.dart' as _i717;
 import 'package:demo_app/services/theme_service/theme_service.dart' as _i1058;
 import 'package:demo_app/services/user/user_service.dart' as _i800;
 import 'package:get_it/get_it.dart' as _i174;
@@ -59,6 +63,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i874.BaseArchController>(
       () => registerModule.baseArchController,
     );
+    gh.singleton<_i527.RestApiClient>(() => registerModule.restApiClient);
     gh.singleton<_i921.NetworkInfoImpl>(() => registerModule.networkInfoImpl);
     gh.singleton<_i205.AppMapController>(() => _i205.AppMapController());
     gh.singleton<_i95.FirebaseItemService>(() => _i95.FirebaseItemService());
@@ -67,6 +72,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i685.AddressService>(() => _i685.AddressService());
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
+    gh.lazySingleton<_i717.PaymentService>(
+      () => _i717.PaymentService(gh<_i194.RestApiClient>()),
+    );
     gh.factory<_i288.CartBloc>(
       () => _i288.CartBloc(gh<_i95.FirebaseItemService>()),
     );
@@ -88,14 +96,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i297.FullScreenErrorBloc>(
       () => _i297.FullScreenErrorBloc(gh<_i921.NetworkInfoImpl>()),
     );
+    gh.singleton<_i931.PreferenceStore>(
+      () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
+    );
     gh.factory<_i52.ConfirmOrderBloc>(
       () => _i52.ConfirmOrderBloc(
         gh<_i95.FirebaseItemService>(),
         gh<_i685.AddressService>(),
+        gh<_i717.PaymentService>(),
       ),
-    );
-    gh.singleton<_i931.PreferenceStore>(
-      () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i421.ExploreBloc>(
       () => _i421.ExploreBloc(

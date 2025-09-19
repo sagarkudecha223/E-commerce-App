@@ -23,6 +23,8 @@ abstract class ConfirmOrderData
 
   List<Address> get addressList;
 
+  bool get isPaymentLoading;
+
   String? get errorMessage;
 }
 

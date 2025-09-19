@@ -63,7 +63,7 @@ class SkeletonCartAndFavItemView extends StatelessWidget {
                 ),
                 Text(
                   'Subtitle here,Subtitle here,Subtitle here ...Subtitle here ...',
-                  style: AppFontTextStyles.textStyleSmall(),
+                  style: AppFontTextStyles.textStyleSmall().copyWith(overflow: TextOverflow.ellipsis),
                 ),
               ],
             ),
