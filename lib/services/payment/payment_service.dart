@@ -11,6 +11,9 @@ class PaymentService {
 
   PaymentService(this._apiClient);
 
+  static const paymentServer =
+      'https://stripe-backend-git-main-sagarkudecha223s-projects.vercel.app/api/create-payment-intent';
+
   static initStripe() async {
     Stripe.publishableKey =
         'pk_test_51S8g2KAWJSiu8PZEVr3AaKiJ7enYGoTYjX000NuEhC7BHiG20LpMvSyyZHZkbXaJVRVdlLVTa5o1P3Afns7lz1Ar003MJ4c4So';
@@ -45,14 +48,12 @@ class PaymentService {
   }
 
   Future<String> _createPaymentIntent(int amount) async {
-    final url = 'http://10.0.2.2:4242/create-payment-intent';
-
     /*   🔹 Use http://10.0.2.2:4242 for Android Emulator,
          🔹 Use http://localhost:4242 if running on iOS Simulator,
          🔹 Use your LAN IP http://192.168.1.100:4242 for real devices.  */
 
     final resp = await _apiClient.dio.post(
-      url,
+      paymentServer,
       data: jsonEncode({'amount': amount}),
     );
 

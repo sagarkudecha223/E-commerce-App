@@ -27,6 +27,7 @@ import 'package:demo_app/bloc/login/login_bloc.dart' as _i197;
 import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
 import 'package:demo_app/bloc/order/confirm_order/confirm_order_bloc.dart'
     as _i52;
+import 'package:demo_app/bloc/drawer/my_order/my_order_bloc.dart' as _i139;
 import 'package:demo_app/bloc/shop/explore/explore_bloc.dart' as _i421;
 import 'package:demo_app/bloc/shop/food_menu/food_menu_bloc.dart' as _i36;
 import 'package:demo_app/bloc/shop/item_card/item_card_bloc.dart' as _i1028;
@@ -41,6 +42,7 @@ import 'package:demo_app/services/firebase/firebase_user_data_service.dart'
     as _i678;
 import 'package:demo_app/services/map/map_service.dart' as _i205;
 import 'package:demo_app/services/notifiers/notifiers.dart' as _i192;
+import 'package:demo_app/services/order/order_service.dart' as _i425;
 import 'package:demo_app/services/payment/payment_service.dart' as _i717;
 import 'package:demo_app/services/theme_service/theme_service.dart' as _i1058;
 import 'package:demo_app/services/user/user_service.dart' as _i800;
@@ -72,6 +74,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i685.AddressService>(() => _i685.AddressService());
     gh.singleton<_i192.ValueNotifiers>(() => _i192.ValueNotifiers());
+    gh.lazySingleton<_i425.OrderService>(() => _i425.OrderService());
     gh.lazySingleton<_i717.PaymentService>(
       () => _i717.PaymentService(gh<_i194.RestApiClient>()),
     );
@@ -93,18 +96,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i338.BaseArchConfig>(
       () => _i338.BaseArchConfig(gh<_i345.BaseArchController>()),
     );
-    gh.factory<_i297.FullScreenErrorBloc>(
-      () => _i297.FullScreenErrorBloc(gh<_i921.NetworkInfoImpl>()),
-    );
-    gh.singleton<_i931.PreferenceStore>(
-      () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
-    );
     gh.factory<_i52.ConfirmOrderBloc>(
       () => _i52.ConfirmOrderBloc(
         gh<_i95.FirebaseItemService>(),
         gh<_i685.AddressService>(),
         gh<_i717.PaymentService>(),
+        gh<_i425.OrderService>(),
       ),
+    );
+    gh.factory<_i297.FullScreenErrorBloc>(
+      () => _i297.FullScreenErrorBloc(gh<_i921.NetworkInfoImpl>()),
+    );
+    gh.singleton<_i931.PreferenceStore>(
+      () => _i931.PreferenceStore(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i421.ExploreBloc>(
       () => _i421.ExploreBloc(
@@ -120,6 +124,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i800.UserService>(
       () => _i800.UserService(gh<_i931.PreferenceStore>()),
+    );
+    gh.factory<_i139.MyOrderBloc>(
+      () => _i139.MyOrderBloc(gh<_i425.OrderService>()),
     );
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),

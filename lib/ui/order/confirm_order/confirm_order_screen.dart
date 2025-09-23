@@ -25,6 +25,7 @@ import '../../common/buttons/icon_button.dart';
 import '../../decoration/screen_background.dart';
 import '../../drawer/address/address_screen.dart';
 import '../../full_screen_error/full_screen_error.dart';
+import '../../home/home_screen.dart';
 
 class ConfirmOrderScreen extends StatefulWidget {
   const ConfirmOrderScreen({super.key});
@@ -67,6 +68,11 @@ class _ConfirmOrderScreenState
       case AppRoutes.addressScreen:
         navigatorKey.currentContext?.push(
           builder: (context) => AddressScreen(),
+          settings: RouteSettings(name: screen.target),
+        );
+      case AppRoutes.homeScreen:
+        navigatorKey.currentContext?.pushAndRemoveUntil(
+          builder: (context) => HomeScreen(),
           settings: RouteSettings(name: screen.target),
         );
     }
@@ -217,12 +223,12 @@ class _PaymentView extends StatelessWidget {
                   const Gap(Dimens.space5xSmall),
                   _AmountView(
                     title: AppLocalization.currentLocalization().taxFees,
-                    amount: 20,
+                    amount: 0,
                   ),
                   const Gap(Dimens.space5xSmall),
                   _AmountView(
                     title: AppLocalization.currentLocalization().delivery,
-                    amount: 15,
+                    amount: 0,
                   ),
                   const Gap(Dimens.space5xSmall),
                   _AmountView(

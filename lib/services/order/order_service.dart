@@ -1,0 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../model/order_model.dart';
+
+@lazySingleton
+class OrderService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String get _uid => _auth.currentUser!.uid;
+
+  CollectionReference<Map<String, dynamic>> get _ordersRef =>
+      _firestore.collection('users').doc(_uid).collection('orders');
+
+  Future<void> placeOrder(OrderModel order) async {
+    final doc = _ordersRef.doc();
+
+    final orderWithId = order.copyWith(id: doc.id);
+
+    await doc.set(orderWithId.toMap());
+  }
+
+  Future<List<OrderModel>> fetchOrders() async {
+    final snapshot =
+        await _ordersRef.orderBy('createdAt', descending: true).get();
+    return snapshot.docs.map((doc) => OrderModel.fromMap(doc.data())).toList();
+  }
+}

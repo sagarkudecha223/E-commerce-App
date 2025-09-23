@@ -1,5 +1,6 @@
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../core/enum.dart';
 import '../../core/routes.dart';
 import '../../services/firebase/firebase_item_service.dart';
@@ -55,7 +56,9 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
     switch (event.drawerOption) {
       case DrawerOptions.profile:
       case DrawerOptions.myOrders:
+        dispatchViewEvent(NavigateScreen(AppRoutes.myOrderScreen));
       case DrawerOptions.deliveryAddress:
+        dispatchViewEvent(NavigateScreen(AppRoutes.addressScreen));
       case DrawerOptions.contactUs:
       case DrawerOptions.settings:
       case DrawerOptions.logout:
