@@ -119,4 +119,16 @@ abstract class AppLocalization extends BaseLocalization {
   String get delivery;
 
   String get placeOrder;
+
+  String get paymentFailed;
+
+  String get paymentSuccess;
+
+  String get orderPlaceSuccess;
+
+  String get pleaseSelectAddress;
+
+  String get cancelOrder;
+
+  String get trackOrder;
 }

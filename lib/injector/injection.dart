@@ -1,4 +1,5 @@
 import 'package:bloc_base_architecture/api/network/network_info.dart';
+import 'package:bloc_base_architecture/api/network/rest_api_client.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -26,6 +27,9 @@ abstract class RegisterModule {
 
   @singleton
   BaseArchController get baseArchController => BaseArchController();
+
+  @singleton
+  RestApiClient get restApiClient => RestApiClient();
 
   @singleton
   NetworkInfoImpl get networkInfoImpl => NetworkInfoImpl();

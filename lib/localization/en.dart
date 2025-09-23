@@ -199,4 +199,22 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get placeOrder => 'Place Order';
+
+  @override
+  String get paymentFailed => 'Payment Failed';
+
+  @override
+  String get paymentSuccess => 'Payment Success';
+
+  @override
+  String get orderPlaceSuccess => 'Order place successfully';
+
+  @override
+  String get pleaseSelectAddress => 'Please select delivery address';
+
+  @override
+  String get cancelOrder => 'Cancel Order';
+
+  @override
+  String get trackOrder => 'Track Order';
 }

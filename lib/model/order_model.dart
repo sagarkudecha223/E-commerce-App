@@ -1,34 +1,66 @@
-import 'cart_item_model.dart';
+import 'address_model.dart';
+import 'item_model.dart';
 
-class Order {
+class OrderModel {
   final String id;
-  final String userId;
-  final List<CartItemModel> items;
-  final double totalAmount;
-  final String status;
+  final List<ItemModel> items;
+  final num totalPrice;
+  final String status; // pending, confirmed, delivered, etc.
   final DateTime createdAt;
+  final Address address;
 
-  Order({
+  OrderModel({
     required this.id,
-    required this.userId,
     required this.items,
-    required this.totalAmount,
+    required this.totalPrice,
     required this.status,
     required this.createdAt,
+    required this.address,
   });
 
-  factory Order.fromMap(
-    String id,
-    Map<String, dynamic> data,
-    List<CartItemModel> items,
-  ) {
-    return Order(
-      id: id,
-      userId: data['userId'],
-      items: items,
-      totalAmount: (data['totalAmount'] as num).toDouble(),
-      status: data['status'],
-      createdAt: (data['createdAt'] as DateTime),
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'items': items.map((e) => e.toOrderMap()).toList(),
+      'totalPrice': totalPrice,
+      'status': status,
+      'createdAt': createdAt.toIso8601String(),
+      'address': address.toJson(),
+    };
+  }
+
+  factory OrderModel.fromMap(Map<String, dynamic> data) {
+    return OrderModel(
+      id: data['id'] ?? '',
+      items:
+          (data['items'] as List<dynamic>)
+              .map((e) => ItemModel.fromOrderMap(e))
+              .toList(),
+      totalPrice: (data['totalPrice'] ?? 0) as num,
+      status: data['status'] ?? 'pending',
+      createdAt: DateTime.tryParse(data['createdAt'] ?? '') ?? DateTime.now(),
+      address: Address.fromJson(
+         '',
+        data['address'] ?? {},
+      ),
+    );
+  }
+
+  OrderModel copyWith({
+    String? id,
+    List<ItemModel>? items,
+    num? totalPrice,
+    String? status,
+    DateTime? createdAt,
+    Address? address,
+  }) {
+    return OrderModel(
+      id: id ?? this.id,
+      items: items ?? this.items,
+      totalPrice: totalPrice ?? this.totalPrice,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      address: address ?? this.address,
     );
   }
 }

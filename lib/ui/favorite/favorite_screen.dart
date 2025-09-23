@@ -42,7 +42,7 @@ class _MainContent extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (bloc.state.state) {
       case ScreenState.loading:
-        return const SkeletonCartFavListView();
+        return SingleChildScrollView(child: const SkeletonCartFavListView());
       case ScreenState.content:
         return CartAndFavListView(
           itemList: bloc.state.favoriteItems,
