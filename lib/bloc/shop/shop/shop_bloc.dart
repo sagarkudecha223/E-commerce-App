@@ -4,42 +4,45 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../core/routes.dart';
 import '../../../services/order/order_service.dart';
-import 'my_order_contract.dart';
+import 'shop_contract.dart';
 
 @injectable
-class MyOrderBloc extends BaseBloc<MyOrderEvent, MyOrderData> {
-  MyOrderBloc(this._orderService) : super(initState) {
-    on<InitMyOrderEvent>(_initMyOrderEvent);
+class ShopBloc extends BaseBloc<ShopEvent, ShopData> {
+  ShopBloc(this._orderService) : super(initState) {
+    on<InitShopEvent>(_initShopEvent);
     on<TrackOrderTapEvent>(_trackOrderTapEvent);
-    on<CancelOrderTapEvent>(_cancelOrderTapEvent);
-    on<UpdateMyOrderState>((event, emit) => emit(event.state));
+    on<UpdateShopState>((event, emit) => emit(event.state));
   }
 
   final OrderService _orderService;
 
-  static MyOrderData get initState =>
-      (MyOrderDataBuilder()
+  static ShopData get initState =>
+      (ShopDataBuilder()
             ..state = ScreenState.loading
-            ..orderList = []
             ..errorMessage = '')
           .build();
 
-  void _initMyOrderEvent(_, __) async {
-    final orderList = await _orderService.fetchOrders();
+  void _initShopEvent(_, __) async {
+    final order = await _orderService.fetchOrders();
+    bool isOrderAvailable = false;
+    if (order.isNotEmpty) {
+      order.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      isOrderAvailable = order.first.status == 'pending';
+    }
     add(
-      UpdateMyOrderState(
+      UpdateShopState(
         state.rebuild(
           (u) =>
               u
                 ..state = ScreenState.content
-                ..orderList = orderList,
+                ..lastOrder = isOrderAvailable ? order.first : null,
         ),
       ),
     );
   }
 
-  void _trackOrderTapEvent(TrackOrderTapEvent event, _) {
-    final locationString = event.orderModel.address.latLong;
+  void _trackOrderTapEvent(_, __) {
+    final locationString = state.lastOrder?.address.latLong ?? '';
     List<String> parts = locationString.split(',');
 
     double latitude = double.parse(parts[0].trim());
@@ -49,6 +52,4 @@ class MyOrderBloc extends BaseBloc<MyOrderEvent, MyOrderData> {
 
     dispatchViewEvent(NavigateScreen(AppRoutes.trackOrderScreen, data: latLng));
   }
-
-  void _cancelOrderTapEvent(CancelOrderTapEvent event, _) {}
 }

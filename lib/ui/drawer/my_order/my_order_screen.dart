@@ -1,15 +1,19 @@
+import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../bloc/drawer/my_order/my_order_bloc.dart';
 import '../../../bloc/drawer/my_order/my_order_contract.dart';
 import '../../../core/colors.dart';
+import '../../../core/constants.dart';
 import '../../../core/dimens.dart';
 import '../../../core/image_converter.dart';
 import '../../../core/images.dart';
+import '../../../core/routes.dart';
 import '../../../core/styles.dart';
 import '../../../localization/app_localization.dart';
 import '../../../model/item_model.dart';
@@ -20,6 +24,7 @@ import '../../common/buttons/elevated_button.dart';
 import '../../common/svg_icon.dart';
 import '../../decoration/container_decoration.dart';
 import '../../decoration/screen_background.dart';
+import '../../order/track_order/track_order_screen.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({super.key});
@@ -33,6 +38,25 @@ class _MyOrderScreenState extends BaseState<MyOrderBloc, MyOrderScreen> {
   void initState() {
     super.initState();
     bloc.add(InitMyOrderEvent());
+  }
+
+  @override
+  void onViewEvent(ViewAction event) {
+    switch (event.runtimeType) {
+      case const (NavigateScreen):
+        _buildHandleActionEvent(event as NavigateScreen);
+    }
+  }
+
+  void _buildHandleActionEvent(NavigateScreen screen) {
+    switch (screen.target) {
+      case AppRoutes.trackOrderScreen:
+        navigatorKey.currentContext?.push(
+          builder:
+              (context) => TrackOrderScreen(destination: screen.data as LatLng),
+          settings: RouteSettings(name: screen.target),
+        );
+    }
   }
 
   @override
@@ -79,6 +103,7 @@ class _OrderContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ScreenBackground(),
+      height: double.infinity,
       padding: EdgeInsets.all(Dimens.spaceSmall),
       child: ListView.builder(
         itemBuilder:
@@ -129,7 +154,12 @@ class _OrderItemView extends StatelessWidget {
                   ],
                 ),
                 const Gap(Dimens.space4xSmall),
-                _ButtonView(onCancelTap: () {}, onTrackTap: () {}),
+                _ButtonView(
+                  onCancelTap:
+                      () => bloc.add(CancelOrderTapEvent(orderModel: item)),
+                  onTrackTap:
+                      () => bloc.add(TrackOrderTapEvent(orderModel: item)),
+                ),
               ],
             ),
           ),
@@ -200,7 +230,7 @@ class _ButtonView extends StatelessWidget {
         const Gap(Dimens.spaceSmall),
         Expanded(
           child: AppElevatedButton(
-            onTap: onCancelTap,
+            onTap: onTrackTap,
             title: AppLocalization.currentLocalization().trackOrder,
           ),
         ),

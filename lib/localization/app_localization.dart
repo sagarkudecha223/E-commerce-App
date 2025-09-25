@@ -131,4 +131,6 @@ abstract class AppLocalization extends BaseLocalization {
   String get cancelOrder;
 
   String get trackOrder;
+
+  String get estimatedTime;
 }

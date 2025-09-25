@@ -6,4 +6,5 @@ class AppRoutes {
   static const String confirmOrderScreen = 'confirmOrderScreen';
   static const String addressScreen = 'addressScreen';
   static const String myOrderScreen = 'myOrderScreen';
+  static const String trackOrderScreen = 'trackOrderScreen';
 }

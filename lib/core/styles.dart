@@ -28,7 +28,7 @@ abstract class AppFontTextStyles {
     fontFamily: AppFontTextStyles.fontFamily,
     fontWeight: FontWeight.w600,
     fontSize: Dimens.fontSizeSixteen,
-    color: AppColors.boldTextColor,
+    color: AppColors.textColor,
     overflow: TextOverflow.ellipsis,
     letterSpacing: 0.07,
   );

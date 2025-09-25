@@ -217,4 +217,7 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get trackOrder => 'Track Order';
+
+  @override
+  String get estimatedTime => 'Estimated Time';
 }

@@ -19,6 +19,7 @@ import 'package:bloc_base_architecture/imports/core_imports.dart' as _i874;
 import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
 import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
 import 'package:demo_app/bloc/drawer/address/address_bloc.dart' as _i785;
+import 'package:demo_app/bloc/drawer/my_order/my_order_bloc.dart' as _i811;
 import 'package:demo_app/bloc/favorite/favorite_bloc.dart' as _i1070;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
@@ -27,11 +28,12 @@ import 'package:demo_app/bloc/login/login_bloc.dart' as _i197;
 import 'package:demo_app/bloc/main_app/main_app_bloc.dart' as _i857;
 import 'package:demo_app/bloc/order/confirm_order/confirm_order_bloc.dart'
     as _i52;
-import 'package:demo_app/bloc/drawer/my_order/my_order_bloc.dart' as _i139;
+import 'package:demo_app/bloc/order/track_order/track_order_bloc.dart' as _i837;
 import 'package:demo_app/bloc/shop/explore/explore_bloc.dart' as _i421;
 import 'package:demo_app/bloc/shop/food_menu/food_menu_bloc.dart' as _i36;
 import 'package:demo_app/bloc/shop/item_card/item_card_bloc.dart' as _i1028;
 import 'package:demo_app/bloc/shop/item_detail/item_detail_bloc.dart' as _i1024;
+import 'package:demo_app/bloc/shop/shop/shop_bloc.dart' as _i582;
 import 'package:demo_app/bloc/sign_up/sign_up_bloc.dart' as _i1060;
 import 'package:demo_app/core/cache/preference_store.dart' as _i931;
 import 'package:demo_app/injector/injection.dart' as _i609;
@@ -40,6 +42,7 @@ import 'package:demo_app/services/firebase/auth_service.dart' as _i265;
 import 'package:demo_app/services/firebase/firebase_item_service.dart' as _i95;
 import 'package:demo_app/services/firebase/firebase_user_data_service.dart'
     as _i678;
+import 'package:demo_app/services/map/map_route_service.dart' as _i585;
 import 'package:demo_app/services/map/map_service.dart' as _i205;
 import 'package:demo_app/services/notifiers/notifiers.dart' as _i192;
 import 'package:demo_app/services/order/order_service.dart' as _i425;
@@ -119,17 +122,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i785.AddressBloc>(
       () => _i785.AddressBloc(gh<_i685.AddressService>()),
     );
+    gh.singleton<_i585.MapRouteService>(
+      () => _i585.MapRouteService(gh<_i194.RestApiClient>()),
+    );
     gh.singleton<_i1058.ThemeService>(
       () => _i1058.ThemeService(gh<_i931.PreferenceStore>()),
     );
     gh.singleton<_i800.UserService>(
       () => _i800.UserService(gh<_i931.PreferenceStore>()),
     );
-    gh.factory<_i139.MyOrderBloc>(
-      () => _i139.MyOrderBloc(gh<_i425.OrderService>()),
+    gh.factory<_i811.MyOrderBloc>(
+      () => _i811.MyOrderBloc(gh<_i425.OrderService>()),
     );
+    gh.factory<_i582.ShopBloc>(() => _i582.ShopBloc(gh<_i425.OrderService>()));
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),
+    );
+    gh.factory<_i837.TrackOrderBloc>(
+      () => _i837.TrackOrderBloc(gh<_i585.MapRouteService>()),
     );
     gh.singleton<_i265.FirebaseAuthService>(
       () => _i265.FirebaseAuthService(
