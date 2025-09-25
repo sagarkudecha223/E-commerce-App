@@ -21,7 +21,30 @@ class OrderService {
     final orderWithId = order.copyWith(id: doc.id);
 
     await doc.set(orderWithId.toMap());
+
+    final cartRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(_uid)
+        .collection('cart');
+
+    final snapshot = await cartRef.get();
+
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
   }
+
+  Stream<List<OrderModel>> ordersStream() => _ordersRef
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => OrderModel.fromMap(doc.data())).toList(),
+      );
 
   Future<List<OrderModel>> fetchOrders() async {
     final snapshot =

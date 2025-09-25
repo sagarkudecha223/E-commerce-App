@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc_base_architecture/imports/api_imports.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,12 +12,10 @@ class PaymentService {
 
   PaymentService(this._apiClient);
 
-  static const paymentServer =
-      'https://stripe-backend-git-main-sagarkudecha223s-projects.vercel.app/api/create-payment-intent';
+  String paymentServer = dotenv.get('PAYMENT_URL');
 
   static initStripe() async {
-    Stripe.publishableKey =
-        'pk_test_51S8g2KAWJSiu8PZEVr3AaKiJ7enYGoTYjX000NuEhC7BHiG20LpMvSyyZHZkbXaJVRVdlLVTa5o1P3Afns7lz1Ar003MJ4c4So';
+    Stripe.publishableKey = dotenv.get('PUBLISHABLE_KEY');
     Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
     Stripe.urlScheme = 'flutterstripe';
     await Stripe.instance.applySettings();

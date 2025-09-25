@@ -22,6 +22,18 @@ abstract class MyOrderEvent {}
 
 class InitMyOrderEvent extends MyOrderEvent {}
 
+class TrackOrderTapEvent extends MyOrderEvent {
+  final OrderModel orderModel;
+
+  TrackOrderTapEvent({required this.orderModel});
+}
+
+class CancelOrderTapEvent extends MyOrderEvent {
+  final OrderModel orderModel;
+
+  CancelOrderTapEvent({required this.orderModel});
+}
+
 class UpdateMyOrderState extends MyOrderEvent {
   final MyOrderData state;
 
