@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sizer/sizer.dart';
 
 import 'injector/injection.dart';
 import 'main_app.dart';
@@ -12,5 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   await configureDependencies();
   await PaymentService.initStripe();
-  runApp(const MainAppScreen());
+  runApp(
+    Sizer(builder: (context, orientation, deviceType) => const MainAppScreen()),
+  );
 }

@@ -105,13 +105,13 @@ class _OrderContent extends StatelessWidget {
       decoration: ScreenBackground(),
       height: double.infinity,
       padding: EdgeInsets.all(Dimens.spaceSmall),
-      child: ListView.builder(
+      child: bloc.state.orderList.isNotEmpty? ListView.builder(
         itemBuilder:
             (context, index) =>
                 _OrderItemView(item: bloc.state.orderList[index], bloc: bloc),
         itemCount: bloc.state.orderList.length,
         shrinkWrap: true,
-      ),
+      ) : Center(child: Text(AppLocalization.currentLocalization().noOrderYet)),
     );
   }
 }

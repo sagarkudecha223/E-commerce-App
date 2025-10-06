@@ -50,5 +50,11 @@ class MyOrderBloc extends BaseBloc<MyOrderEvent, MyOrderData> {
     dispatchViewEvent(NavigateScreen(AppRoutes.trackOrderScreen, data: latLng));
   }
 
-  void _cancelOrderTapEvent(CancelOrderTapEvent event, _) {}
+  void _cancelOrderTapEvent(CancelOrderTapEvent event, _) async {
+    add(
+      UpdateMyOrderState(state.rebuild((u) => u.state = ScreenState.loading)),
+    );
+    await _orderService.deleteOrder(event.orderModel.id);
+    add(InitMyOrderEvent());
+  }
 }

@@ -192,13 +192,13 @@ class _AppBar extends StatelessWidget {
             ),
           ),
           AppIconButton(
-            svgImage: Images.cart,
-            onTap: () => bloc.add(CartTapEvent()),
+            svgImage: Images.orders,
+            onTap: () => bloc.add(OrderTapEvent()),
             backgroundColor: AppColors.white,
           ),
           AppIconButton(
-            svgImage: Images.profile,
-            onTap: () {},
+            svgImage: Images.cart,
+            onTap: () => bloc.add(CartTapEvent()),
             backgroundColor: AppColors.white,
           ),
           AppIconButton(

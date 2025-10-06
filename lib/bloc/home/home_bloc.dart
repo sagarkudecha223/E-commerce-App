@@ -14,6 +14,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
     : super(initState) {
     on<InitHomeEvent>(_initHomeEvent);
     on<CartTapEvent>(_cartTapEvent);
+    on<OrderTapEvent>(_orderTapEvent);
     on<BottomItemTapEvent>(_bottomItemTapEvent);
     on<DrawerOptionTapEvent>(_drawerOptionTapEvent);
     on<UpdateHomeState>((event, emit) => emit(event.state));
@@ -51,6 +52,9 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
 
   void _cartTapEvent(_, __) =>
       dispatchViewEvent(NavigateScreen(AppRoutes.confirmOrderScreen));
+
+  void _orderTapEvent(_, __) =>
+      dispatchViewEvent(NavigateScreen(AppRoutes.myOrderScreen));
 
   void _drawerOptionTapEvent(DrawerOptionTapEvent event, _) {
     switch (event.drawerOption) {

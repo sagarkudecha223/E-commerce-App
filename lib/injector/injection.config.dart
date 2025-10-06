@@ -134,7 +134,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i811.MyOrderBloc>(
       () => _i811.MyOrderBloc(gh<_i425.OrderService>()),
     );
-    gh.factory<_i582.ShopBloc>(() => _i582.ShopBloc(gh<_i425.OrderService>()));
+    gh.factory<_i582.ShopBloc>(
+      () => _i582.ShopBloc(
+        gh<_i425.OrderService>(),
+        gh<_i95.FirebaseItemService>(),
+      ),
+    );
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),
     );
