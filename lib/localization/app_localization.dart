@@ -133,4 +133,12 @@ abstract class AppLocalization extends BaseLocalization {
   String get trackOrder;
 
   String get estimatedTime;
+
+  String get viewAll;
+
+  String get bestSellers;
+
+  String get recommendation;
+
+  String get noOrderYet;
 }

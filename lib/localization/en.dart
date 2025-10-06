@@ -220,4 +220,16 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get estimatedTime => 'Estimated Time';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get bestSellers => 'Best Sellers';
+
+  @override
+  String get recommendation => 'Recommendation';
+
+  @override
+  String get noOrderYet => 'No order yet';
 }

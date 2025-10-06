@@ -38,6 +38,11 @@ class OrderService {
     await batch.commit();
   }
 
+  Future<void> deleteOrder(String orderId) async {
+    final orderRef = _ordersRef.doc(orderId);
+    await orderRef.delete();
+  }
+
   Stream<List<OrderModel>> ordersStream() => _ordersRef
       .orderBy('createdAt', descending: true)
       .snapshots()

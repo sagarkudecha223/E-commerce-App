@@ -7,3 +7,7 @@
 -dontwarn kotlinx.parcelize.Parcelize
 # Keep Stripe classes
 -keep class com.stripe.** { *; }
+
+# Stripe Push Provisioning fix
+-dontwarn com.stripe.android.pushProvisioning.PushProvisioningEphemeralKeyProvider
+-keep class com.stripe.android.pushProvisioning.PushProvisioningEphemeralKeyProvider { *; }

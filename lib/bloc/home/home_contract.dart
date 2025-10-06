@@ -26,6 +26,8 @@ class InitHomeEvent extends HomeEvent {}
 
 class CartTapEvent extends HomeEvent {}
 
+class OrderTapEvent extends HomeEvent {}
+
 class BottomItemTapEvent extends HomeEvent {
   final int index;
 
