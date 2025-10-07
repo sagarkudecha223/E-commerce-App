@@ -203,6 +203,7 @@ class _SliderView extends StatelessWidget {
               options: CarouselOptions(
                 autoPlay: true,
                 viewportFraction: 0.3,
+                autoPlayInterval: Duration(seconds: 2),
                 enlargeCenterPage: true,
                 enlargeFactor: 0.15,
                 aspectRatio: 2,
@@ -373,10 +374,15 @@ class _OrderView extends StatelessWidget {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemBuilder:
-                    (context, index) => _ImageView(
-                      imageUrl: bloc.state.lastOrder!.items[index].imageUrl,
-                      height: Dimens.iconLarge,
-                      width: Dimens.icon6xLarge,
+                    (context, index) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spaceMin,
+                      ),
+                      child: _ImageView(
+                        imageUrl: bloc.state.lastOrder!.items[index].imageUrl,
+                        height: Dimens.iconLarge,
+                        width: Dimens.icon6xLarge,
+                      ),
                     ),
               ),
             ),

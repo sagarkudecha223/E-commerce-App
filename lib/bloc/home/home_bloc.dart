@@ -59,6 +59,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
   void _drawerOptionTapEvent(DrawerOptionTapEvent event, _) {
     switch (event.drawerOption) {
       case DrawerOptions.profile:
+        dispatchViewEvent(NavigateScreen(AppRoutes.profileScreen));
       case DrawerOptions.myOrders:
         dispatchViewEvent(NavigateScreen(AppRoutes.myOrderScreen));
       case DrawerOptions.deliveryAddress:

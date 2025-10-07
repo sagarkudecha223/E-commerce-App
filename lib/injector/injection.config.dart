@@ -20,6 +20,7 @@ import 'package:demo_app/base_arch_config/base_arch_config.dart' as _i338;
 import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
 import 'package:demo_app/bloc/drawer/address/address_bloc.dart' as _i785;
 import 'package:demo_app/bloc/drawer/my_order/my_order_bloc.dart' as _i811;
+import 'package:demo_app/bloc/drawer/profile/profile_bloc.dart' as _i411;
 import 'package:demo_app/bloc/favorite/favorite_bloc.dart' as _i1070;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
@@ -142,6 +143,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i857.MainAppBloc>(
       () => _i857.MainAppBloc(gh<_i800.UserService>()),
+    );
+    gh.factory<_i411.ProfileBloc>(
+      () => _i411.ProfileBloc(
+        gh<_i800.UserService>(),
+        gh<_i685.AddressService>(),
+      ),
     );
     gh.factory<_i837.TrackOrderBloc>(
       () => _i837.TrackOrderBloc(gh<_i585.MapRouteService>()),
