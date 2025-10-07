@@ -21,6 +21,7 @@ import 'package:demo_app/bloc/cart/cart_bloc.dart' as _i288;
 import 'package:demo_app/bloc/drawer/address/address_bloc.dart' as _i785;
 import 'package:demo_app/bloc/drawer/my_order/my_order_bloc.dart' as _i811;
 import 'package:demo_app/bloc/drawer/profile/profile_bloc.dart' as _i411;
+import 'package:demo_app/bloc/drawer/setting/setting_bloc.dart' as _i710;
 import 'package:demo_app/bloc/favorite/favorite_bloc.dart' as _i1070;
 import 'package:demo_app/bloc/full_screen_error/full_screen_error_bloc.dart'
     as _i297;
@@ -171,6 +172,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i192.ValueNotifiers>(),
         gh<_i95.FirebaseItemService>(),
       ),
+    );
+    gh.factory<_i710.SettingBloc>(
+      () => _i710.SettingBloc(gh<_i1058.ThemeService>()),
     );
     gh.factory<_i1060.SignUpBloc>(
       () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),

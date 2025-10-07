@@ -141,4 +141,6 @@ abstract class AppLocalization extends BaseLocalization {
   String get recommendation;
 
   String get noOrderYet;
+
+  String get theme;
 }

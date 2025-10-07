@@ -25,6 +25,7 @@ import '../decoration/screen_background.dart';
 import '../drawer/address/address_screen.dart';
 import '../drawer/my_order/my_order_screen.dart';
 import '../drawer/profile/profile_screen.dart';
+import '../drawer/setting/setting_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../full_screen_error/full_screen_error.dart';
 import '../order/confirm_order/confirm_order_screen.dart';
@@ -75,6 +76,11 @@ class _HomeScreenState extends BaseState<HomeBloc, HomeScreen> {
       case AppRoutes.addressScreen:
         navigatorKey.currentContext?.push(
           builder: (context) => AddressScreen(),
+          settings: RouteSettings(name: screen.target),
+        );
+      case AppRoutes.settingScreen:
+        navigatorKey.currentContext?.push(
+          builder: (context) => SettingScreen(),
           settings: RouteSettings(name: screen.target),
         );
     }
@@ -229,11 +235,11 @@ class _CenterContent extends StatelessWidget {
       index: index,
       preloadIndexes: [0],
       children: [
-        const ShopScreen(),
-        const ExploreScreen(),
-        const CartScreen(),
-        const FavoriteScreen(),
-        const ProfileScreen(isFromTab: true),
+        ShopScreen(),
+        ExploreScreen(),
+        CartScreen(),
+        FavoriteScreen(),
+        ProfileScreen(isFromTab: true),
       ],
     );
   }

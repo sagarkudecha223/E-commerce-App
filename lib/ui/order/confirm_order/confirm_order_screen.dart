@@ -141,6 +141,8 @@ class _OrderContent extends StatelessWidget {
                   _AddressView(bloc: bloc),
                   const Gap(Dimens.spaceSmall),
                   CartScreen(isFromTab: false),
+                  if (bloc.state.itemList.isNotEmpty)
+                    const SizedBox(height: Dimens.containerXSmall),
                 ],
               ),
             ),

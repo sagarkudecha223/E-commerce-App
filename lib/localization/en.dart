@@ -232,4 +232,7 @@ class EnglishLocalization extends AppLocalization {
 
   @override
   String get noOrderYet => 'No order yet';
+
+  @override
+  String get theme => 'Theme';
 }

@@ -66,6 +66,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeData> {
         dispatchViewEvent(NavigateScreen(AppRoutes.addressScreen));
       case DrawerOptions.contactUs:
       case DrawerOptions.settings:
+        dispatchViewEvent(NavigateScreen(AppRoutes.settingScreen));
       case DrawerOptions.logout:
     }
   }
