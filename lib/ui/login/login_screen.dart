@@ -139,6 +139,7 @@ class _LoginContent extends StatelessWidget {
               title: AppLocalization.currentLocalization().password,
               controller: bloc.state.passwordController,
               obscureText: true,
+              onSubmit: () => bloc.add(LoginTapEvent()),
             ),
             const Gap(Dimens.space4xLarge),
             _LoginButton(
@@ -192,11 +193,13 @@ class _TextField extends StatelessWidget {
   final TextEditingController controller;
   final String title;
   final bool obscureText;
+  final Function()? onSubmit;
 
   const _TextField({
     required this.controller,
     required this.title,
     this.obscureText = false,
+    this.onSubmit,
   });
 
   @override
@@ -206,6 +209,7 @@ class _TextField extends StatelessWidget {
       textEditingController: controller,
       textInputAction:
           obscureText ? TextInputAction.done : TextInputAction.next,
+      onSubmitted: (p0) => obscureText ? onSubmit!() : null,
       keyboardType:
           obscureText
               ? TextInputType.visiblePassword

@@ -1,7 +1,6 @@
 import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,16 +12,15 @@ import '../../bloc/shop/shop/shop_contract.dart';
 import '../../core/colors.dart';
 import '../../core/constants.dart';
 import '../../core/dimens.dart';
-import '../../core/image_converter.dart';
 import '../../core/images.dart';
 import '../../core/routes.dart';
 import '../../core/styles.dart';
 import '../../localization/app_localization.dart';
 import '../../model/item_model.dart';
-import '../common/anim/hero.dart';
 import '../common/app_inkwell.dart';
 import '../common/app_loader.dart';
 import '../common/buttons/icon_button.dart';
+import '../common/cache_network_image_view.dart';
 import '../common/svg_icon.dart';
 import '../decoration/container_decoration.dart';
 import '../full_screen_error/full_screen_error.dart';
@@ -350,18 +348,22 @@ class _OrderView extends StatelessWidget {
                   Icon(
                     Icons.location_on_rounded,
                     size: Dimens.iconXSmall,
-                    color: AppColors.textColor,
+                    color: AppColors.lightTextHigh,
                   ),
                   const Gap(Dimens.space4xSmall),
                   Text(
                     bloc.state.lastOrder?.address.label ?? '',
-                    style: AppFontTextStyles.textStyleBold(),
+                    style: AppFontTextStyles.textStyleBold().copyWith(
+                      color: AppColors.lightTextHigh,
+                    ),
                   ),
                 ],
               ),
               Text(
                 ' ${AppLocalization.currentLocalization().amount(bloc.state.lastOrder!.totalPrice.toString())}',
-                style: AppFontTextStyles.textStyleBold(),
+                style: AppFontTextStyles.textStyleBold().copyWith(
+                  color: AppColors.lightTextHigh,
+                ),
               ),
             ],
           ),
@@ -415,24 +417,11 @@ class _ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeroAnim(
-      tag: heroTag ?? imageUrl,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radiusMedium),
-        child: CachedNetworkImage(
-          imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
-          fit: BoxFit.cover,
-          height: height,
-          width: width,
-          alignment: Alignment.center,
-          filterQuality: FilterQuality.medium,
-          progressIndicatorBuilder:
-              (context, url, progress) => Center(child: AppLoader()),
-          errorWidget:
-              (context, url, error) =>
-                  AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
-        ),
-      ),
+    return CacheNetworkImageView(
+      imageUrl: imageUrl,
+      heroTag: heroTag ?? imageUrl,
+      height: height,
+      width: width,
     );
   }
 }
