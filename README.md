@@ -6,6 +6,10 @@ A modern and scalable **Flutter-based food delivery app** powered by **BLoC**, *
 
 ---
 
+### 🌐 Live Web Demo
+🌐 [E-Commerce Web App](https://e-commerce-app-338db.firebaseapp.com/)
+
+
 ## 📱 Download APK
 
 👉 [**Download Latest APK**](https://drive.google.com/file/d/16D9ypehDwdgTSu8Z9W2NuRlhXLdu1JvW/view?usp=sharing)
