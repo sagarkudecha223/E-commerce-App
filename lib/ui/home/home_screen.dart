@@ -28,6 +28,7 @@ import '../drawer/profile/profile_screen.dart';
 import '../drawer/setting/setting_screen.dart';
 import '../favorite/favorite_screen.dart';
 import '../full_screen_error/full_screen_error.dart';
+import '../login/login_screen.dart';
 import '../order/confirm_order/confirm_order_screen.dart';
 import '../shop/explore/explore_screen.dart';
 import '../shop/food_menu/food_menu_view.dart';
@@ -81,6 +82,11 @@ class _HomeScreenState extends BaseState<HomeBloc, HomeScreen> {
       case AppRoutes.settingScreen:
         navigatorKey.currentContext?.push(
           builder: (context) => SettingScreen(),
+          settings: RouteSettings(name: screen.target),
+        );
+      case AppRoutes.loginScreen:
+        navigatorKey.currentContext?.pushAndRemoveUntil(
+          builder: (context) => LoginScreen(),
           settings: RouteSettings(name: screen.target),
         );
     }

@@ -1,7 +1,6 @@
 import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,8 +10,6 @@ import '../../../bloc/drawer/my_order/my_order_contract.dart';
 import '../../../core/colors.dart';
 import '../../../core/constants.dart';
 import '../../../core/dimens.dart';
-import '../../../core/image_converter.dart';
-import '../../../core/images.dart';
 import '../../../core/routes.dart';
 import '../../../core/styles.dart';
 import '../../../localization/app_localization.dart';
@@ -21,7 +18,7 @@ import '../../../model/order_model.dart';
 import '../../common/app_bar.dart';
 import '../../common/app_loader.dart';
 import '../../common/buttons/elevated_button.dart';
-import '../../common/svg_icon.dart';
+import '../../common/cache_network_image_view.dart';
 import '../../decoration/container_decoration.dart';
 import '../../decoration/screen_background.dart';
 import '../../order/track_order/track_order_screen.dart';
@@ -105,13 +102,20 @@ class _OrderContent extends StatelessWidget {
       decoration: ScreenBackground(),
       height: double.infinity,
       padding: EdgeInsets.all(Dimens.spaceSmall),
-      child: bloc.state.orderList.isNotEmpty? ListView.builder(
-        itemBuilder:
-            (context, index) =>
-                _OrderItemView(item: bloc.state.orderList[index], bloc: bloc),
-        itemCount: bloc.state.orderList.length,
-        shrinkWrap: true,
-      ) : Center(child: Text(AppLocalization.currentLocalization().noOrderYet)),
+      child:
+          bloc.state.orderList.isNotEmpty
+              ? ListView.builder(
+                itemBuilder:
+                    (context, index) => _OrderItemView(
+                      item: bloc.state.orderList[index],
+                      bloc: bloc,
+                    ),
+                itemCount: bloc.state.orderList.length,
+                shrinkWrap: true,
+              )
+              : Center(
+                child: Text(AppLocalization.currentLocalization().noOrderYet),
+              ),
     );
   }
 }
@@ -304,19 +308,11 @@ class _ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      child: CachedNetworkImage(
-        imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        filterQuality: FilterQuality.medium,
-        progressIndicatorBuilder:
-            (context, url, progress) => Center(child: AppLoader()),
-        errorWidget:
-            (context, url, error) =>
-                AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
-      ),
+    return CacheNetworkImageView(
+      imageUrl: imageUrl,
+      heroTag: 'id',
+      height: Dimens.containerSmall,
+      width: double.infinity,
     );
   }
 }

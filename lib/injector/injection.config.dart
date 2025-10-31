@@ -166,18 +166,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i800.UserService>(),
       ),
     );
-    gh.factory<_i892.HomeBloc>(
-      () => _i892.HomeBloc(
-        gh<_i800.UserService>(),
-        gh<_i192.ValueNotifiers>(),
-        gh<_i95.FirebaseItemService>(),
-      ),
-    );
     gh.factory<_i710.SettingBloc>(
       () => _i710.SettingBloc(gh<_i1058.ThemeService>()),
     );
     gh.factory<_i1060.SignUpBloc>(
       () => _i1060.SignUpBloc(gh<_i265.FirebaseAuthService>()),
+    );
+    gh.factory<_i892.HomeBloc>(
+      () => _i892.HomeBloc(
+        gh<_i800.UserService>(),
+        gh<_i192.ValueNotifiers>(),
+        gh<_i95.FirebaseItemService>(),
+        gh<_i265.FirebaseAuthService>(),
+      ),
     );
     return this;
   }

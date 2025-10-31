@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sizer/sizer.dart';
 
+import 'firebase_options.dart';
 import 'injector/injection.dart';
 import 'main_app.dart';
 import 'services/payment/payment_service.dart';
@@ -10,7 +11,7 @@ import 'services/payment/payment_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await configureDependencies();
   await PaymentService.initStripe();
   runApp(

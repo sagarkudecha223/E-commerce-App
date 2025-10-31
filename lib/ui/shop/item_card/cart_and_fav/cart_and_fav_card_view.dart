@@ -2,7 +2,6 @@ import 'package:bloc_base_architecture/extension/navigation_extensions.dart';
 import 'package:bloc_base_architecture/extension/string_extensions.dart';
 import 'package:bloc_base_architecture/imports/core_imports.dart';
 import 'package:bloc_base_architecture/imports/package_imports.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -11,19 +10,16 @@ import '../../../../bloc/shop/item_card/item_card_contract.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/dimens.dart';
-import '../../../../core/image_converter.dart';
 import '../../../../core/images.dart';
 import '../../../../core/routes.dart';
 import '../../../../core/styles.dart';
 import '../../../../localization/app_localization.dart';
 import '../../../../model/item_model.dart';
-import '../../../common/anim/hero.dart';
 import '../../../common/app_inkwell.dart';
-import '../../../common/app_loader.dart';
 import '../../../common/buttons/icon_button.dart';
+import '../../../common/cache_network_image_view.dart';
 import '../../../common/skeleton/skeleton_cart_and_fav_view.dart';
 import '../../../common/skeleton/skeleton_wrapper.dart';
-import '../../../common/svg_icon.dart';
 import '../../../decoration/container_decoration.dart';
 import '../../../full_screen_error/full_screen_error.dart';
 import '../../item_detail/item_detail_screen.dart';
@@ -185,24 +181,11 @@ class _ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HeroAnim(
-      tag: id,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-        child: CachedNetworkImage(
-          imageUrl: ImageConverter.convertDriveLinkToDirect(imageUrl),
-          height: Dimens.containerSmall,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
-          filterQuality: FilterQuality.medium,
-          progressIndicatorBuilder:
-              (context, url, progress) => Center(child: AppLoader()),
-          errorWidget:
-              (context, url, error) =>
-                  AppSvgIcon(Images.snacks, height: Dimens.iconMedium),
-        ),
-      ),
+    return CacheNetworkImageView(
+      imageUrl: imageUrl,
+      heroTag: id,
+      height: Dimens.containerSmall,
+      width: double.infinity,
     );
   }
 }
